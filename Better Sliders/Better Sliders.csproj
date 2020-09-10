@@ -25,15 +25,22 @@
         <WarningLevel>4</WarningLevel>
         <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>..\1.2\Assemblies</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release 1.1|AnyCPU' ">
+      <OutputPath>..\1.1\Assemblies</OutputPath>
+      <DebugSymbols>true</DebugSymbols>
+      <Optimize>true</Optimize>
+      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+      <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release 1.2|AnyCPU' ">
+      <DebugType>pdbonly</DebugType>
+      <Optimize>true</Optimize>
+      <DefineConstants></DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+      <OutputPath>..\1.2\Assemblies</OutputPath>
+      <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="0Harmony, Version=2.0.2.0, Culture=neutral, PublicKeyToken=null">
