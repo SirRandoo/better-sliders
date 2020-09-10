@@ -62,10 +62,6 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
                 GUI.FocusControl("TextField" + __state.MaximumDrawRect.y.ToString("F0") + __state.MaximumDrawRect.x.ToString("F0"));
             }
 
-            bool percent = valueStyle == ToStringStyle.PercentOne
-                           || valueStyle == ToStringStyle.PercentZero
-                           || valueStyle == ToStringStyle.PercentTwo;
-
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
