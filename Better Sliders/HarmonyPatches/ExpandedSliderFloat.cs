@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using HarmonyLib;
@@ -24,7 +25,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         private static void Prefix(Rect rect, ref ExpandedState __state)
         {
             __state = new ExpandedState();
-            
+
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
@@ -39,36 +40,49 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
                 distributedWidth,
                 Text.LineHeight
             );
-            
+
             __state.ShouldFocusField = __state.MinimumDrawRect.WasClicked() || __state.MaximumDrawRect.WasClicked();
             Text.Font = cache;
         }
 
         [UsedImplicitly]
-        private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, ref ExpandedState __state)
+        private static void Postfix(
+            Rect rect,
+            ref FloatRange range,
+            float min,
+            float max,
+            ToStringStyle valueStyle,
+            ref ExpandedState __state
+        )
         {
             if (!Mouse.IsOver(rect))
             {
                 return;
             }
-            
+
             if (Mouse.IsOver(__state.MinimumDrawRect) && __state.ShouldFocusField)
             {
-                GUI.FocusControl("TextField" + __state.MinimumDrawRect.y.ToString("F0") + __state.MinimumDrawRect.x.ToString("F0"));
+                GUI.FocusControl($"TextField{__state.MinimumDrawRect.y:F0}{__state.MinimumDrawRect.x:F0}");
             }
 
             if (Mouse.IsOver(__state.MaximumDrawRect) && __state.ShouldFocusField)
             {
-                GUI.FocusControl("TextField" + __state.MaximumDrawRect.y.ToString("F0") + __state.MaximumDrawRect.x.ToString("F0"));
+                GUI.FocusControl($"TextField{__state.MaximumDrawRect.y:F0}{__state.MaximumDrawRect.x:F0}");
             }
 
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
-
-            var minBuffer = range.min.ToString("0.0#########");
-            var maxBuffer = range.max.ToString("0.0#########");
-            UIHelper.DoubleSpinbox(__state.MinimumDrawRect, ref range.min, ref minBuffer, min, range.max);
-            UIHelper.DoubleSpinbox(__state.MaximumDrawRect, ref range.max, ref maxBuffer, range.min, max);
+            UIHelper.MinMaxSpinboxes(
+                __state.MinimumDrawRect,
+                __state.MaximumDrawRect,
+                ref range.min,
+                ref range.max,
+                min,
+                max,
+                valueStyle == ToStringStyle.PercentZero
+                || valueStyle == ToStringStyle.PercentOne
+                || valueStyle == ToStringStyle.PercentTwo
+            );
             Text.Font = cache;
         }
     }

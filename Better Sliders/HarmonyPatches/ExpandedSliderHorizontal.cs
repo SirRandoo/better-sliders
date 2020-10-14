@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -46,14 +44,17 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
             
             if (__state.ShouldFocusField)
             {
-                GUI.FocusControl("TextField" + __state.HorizontalDrawRect.y.ToString("F0") + __state.HorizontalDrawRect.x.ToString("F0"));
+                GUI.FocusControl($"TextField{__state.HorizontalDrawRect.y:F0}{__state.HorizontalDrawRect.x:F0}");
             }
 
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
-
-            var fieldBuffer = __result.ToString("0.0#########");
-            UIHelper.DoubleSpinbox(__state.HorizontalDrawRect, ref __result, ref fieldBuffer, leftValue, rightValue);
+            UIHelper.DoubleSpinbox(
+                __state.HorizontalDrawRect,
+                ref __result,
+                leftValue <= rightValue ? leftValue : rightValue,
+                rightValue >= leftValue ? rightValue : leftValue
+            );
             Text.Font = cache;
 
             if (roundTo > 0.0)
