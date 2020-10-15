@@ -1,19 +1,10 @@
-﻿using System.Globalization;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace SirRandoo.BetterSliders.Helpers
 {
     public static class UIHelper
     {
-        private static string _singleSliderBuffer = "";
-        private static Vector2 _singleCurrentlyFocused = new Vector2(-1f, -1f);
-
-        private static string _doubleMinSliderBuffer = "";
-        private static string _doubleMaxSliderBuffer = "";
-        private static Vector2 _doubleCurrentlyFocusedMin = new Vector2(-1f, -1f);
-        private static Vector2 _doubleCurrentlyFocusedMax = new Vector2(-1f, -1f);
-
         public static bool WasClicked(this Rect region)
         {
             if (!Mouse.IsOver(region))
@@ -35,206 +26,85 @@ namespace SirRandoo.BetterSliders.Helpers
             }
         }
 
-        public static void Spinbox(Rect region, ref int value, float min = 0f, float max = 1E+09f, bool percent = false)
+        public static void Spinbox(Rect region, ref int value, ref string buffer, float min = 0f, float max = 1E+09f, bool percent = false)
         {
-            if (_singleCurrentlyFocused != region.position)
+            buffer ??= value.ToString();
+
+            if (percent && !buffer.EndsWith("%"))
             {
-                _singleCurrentlyFocused = region.position;
-                _singleSliderBuffer = percent ? $"{value}%" : value.ToString();
+                buffer += "%";
             }
 
-            if (percent && !_singleSliderBuffer.EndsWith("%"))
+            var controlName = $"TextField{region.y:F0}{region.x:F0}";
+            GUI.SetNextControlName(controlName);
+
+            string result = GUI.TextField(region, buffer, Text.CurTextFieldStyle);
+
+            if (GUI.GetNameOfFocusedControl() != controlName)
             {
-                _singleSliderBuffer += "%";
+                NumberHelper.ParseInteger(buffer, ref value, ref buffer, min, max, true);
             }
-
-            GUI.SetNextControlName($"TextField{region.y:F0}{region.x:F0}");
-            _singleSliderBuffer = GUI.TextField(region, _singleSliderBuffer, Text.CurTextFieldStyle);
-
-            if (int.TryParse(_singleSliderBuffer.TrimEnd('%'), out int maybeValue))
+            else
             {
-                value = (int) Mathf.Clamp(maybeValue, min, max);
+                if (percent && result.EndsWith("%"))
+                {
+                    result = result.Substring(0, result.Length - 1);
+                }
+                
+                if (result == buffer || !NumberHelper.IsPartiallyOrFullyTypedNumber<int>(result, min))
+                {
+                    return;
+                }
+
+                buffer = result;
+
+                if (!result.IsFullyTypedNumber<int>())
+                {
+                    return;
+                }
+                
+                NumberHelper.ParseInteger(result, ref value, ref buffer, min, max, false);
             }
         }
 
-        public static void DoubleSpinbox(
-            Rect region,
-            ref float value,
-            float min = 0f,
-            float max = 1E+09f,
-            bool percent = false
-        )
+        public static void DoubleSpinbox(Rect region, ref float value, ref string buffer, float min = 0f, float max = 1E+09f, bool percent = false)
         {
-            if (_singleCurrentlyFocused != region.position)
+            buffer ??= value.ToString("0.0#########");
+
+            if (percent && !buffer.EndsWith("%"))
             {
-                _singleCurrentlyFocused = region.position;
-                _singleSliderBuffer = percent ? $"{value}%" : value.ToString(CultureInfo.InvariantCulture);
+                buffer += "%";
             }
 
-            if (percent && !_singleSliderBuffer.EndsWith("%"))
+            var controlName = $"TextField{region.y:F0}{region.x:F0}";
+            GUI.SetNextControlName(controlName);
+
+            string result = GUI.TextField(region, buffer, Text.CurTextFieldStyle);
+            
+            if (percent && result.EndsWith("%"))
             {
-                _singleSliderBuffer += "%";
+                result = result.Substring(0, result.Length - 1);
             }
-
-            GUI.SetNextControlName($"TextField{region.y:F0}{region.x:F0}");
-            _singleSliderBuffer = GUI.TextField(region, _singleSliderBuffer, Text.CurTextFieldStyle);
-
-            if (float.TryParse(_singleSliderBuffer.TrimEnd('%'), out float maybeValue))
+            
+            if (GUI.GetNameOfFocusedControl() != controlName)
             {
-                value = Mathf.Clamp(maybeValue, min, max);
+                NumberHelper.ParseFloat(buffer, ref value, ref buffer, min, max, true);
             }
-        }
-
-        public static void MinMaxSpinboxes(
-            Rect minRegion,
-            Rect maxRegion,
-            ref float minValue,
-            ref float maxValue,
-            float min = 0f,
-            float max = 1E+09f,
-            bool percentages = false
-        )
-        {
-            ValidateFocusChange(
-                ref _doubleCurrentlyFocusedMin,
-                ref _doubleMinSliderBuffer,
-                minRegion,
-                minValue,
-                percentages
-            );
-
-            ValidateFocusChange(
-                ref _doubleCurrentlyFocusedMax,
-                ref _doubleMaxSliderBuffer,
-                maxRegion,
-                maxValue,
-                percentages
-            );
-
-            if (percentages && !_doubleMinSliderBuffer.EndsWith("%"))
+            else
             {
-                _doubleMinSliderBuffer += "%";
-            }
+                if (result == buffer || !NumberHelper.IsPartiallyOrFullyTypedNumber<float>(result, min))
+                {
+                    return;
+                }
 
-            if (percentages && !_doubleMaxSliderBuffer.EndsWith("%"))
-            {
-                _doubleMaxSliderBuffer += "%";
-            }
+                buffer = result;
 
-            GUI.SetNextControlName($"TextField{minRegion.y:F0}{minRegion.x:F0}");
-            _doubleMinSliderBuffer = GUI.TextField(minRegion, _doubleMinSliderBuffer, Text.CurTextFieldStyle);
-            GUI.SetNextControlName($"TextField{maxRegion.y:F0}{maxRegion.x:F0}");
-            _doubleMaxSliderBuffer = GUI.TextField(maxRegion, _doubleMaxSliderBuffer, Text.CurTextFieldStyle);
-
-            if (TryParseFloat(_doubleMinSliderBuffer, min, maxValue, out float maybeMinValue, percentages))
-            {
-                minValue = maybeMinValue;
-            }
-
-            if (TryParseFloat(_doubleMaxSliderBuffer, minValue, max, out float maybeMaxValue, percentages))
-            {
-                maxValue = maybeMaxValue;
-            }
-        }
-        
-        public static void MinMaxSpinboxes(
-            Rect minRegion,
-            Rect maxRegion,
-            ref int minValue,
-            ref int maxValue,
-            float min = 0f,
-            float max = 1E+09f,
-            bool percentages = false
-        )
-        {
-            ValidateFocusChange(
-                ref _doubleCurrentlyFocusedMin,
-                ref _doubleMinSliderBuffer,
-                minRegion,
-                minValue,
-                percentages
-            );
-
-            ValidateFocusChange(
-                ref _doubleCurrentlyFocusedMax,
-                ref _doubleMaxSliderBuffer,
-                maxRegion,
-                maxValue,
-                percentages
-            );
-
-            if (percentages && !_doubleMinSliderBuffer.EndsWith("%"))
-            {
-                _doubleMinSliderBuffer += "%";
-            }
-
-            if (percentages && !_doubleMaxSliderBuffer.EndsWith("%"))
-            {
-                _doubleMaxSliderBuffer += "%";
-            }
-
-            GUI.SetNextControlName($"TextField{minRegion.y:F0}{minRegion.x:F0}");
-            _doubleMinSliderBuffer = GUI.TextField(minRegion, _doubleMinSliderBuffer, Text.CurTextFieldStyle);
-            GUI.SetNextControlName($"TextField{maxRegion.y:F0}{maxRegion.x:F0}");
-            _doubleMaxSliderBuffer = GUI.TextField(maxRegion, _doubleMaxSliderBuffer, Text.CurTextFieldStyle);
-
-            if (TryParseInt(_doubleMinSliderBuffer, min, maxValue, out int maybeMinValue, percentages))
-            {
-                minValue = maybeMinValue;
-            }
-
-            if (TryParseInt(_doubleMaxSliderBuffer, minValue, max, out int maybeMaxValue, percentages))
-            {
-                maxValue = maybeMaxValue;
-            }
-        }
-
-        private static bool TryParseFloat(string input, float min, float max, out float value, bool percent = false)
-        {
-            if (!float.TryParse(input.TrimEnd('%'), out float maybeMinValue))
-            {
-                value = 0;
-                return false;
-            }
-
-            if (percent)
-            {
-                maybeMinValue /= 100f;
-            }
-
-            value = Mathf.Clamp(maybeMinValue, min, max);
-            return true;
-        }
-
-        private static bool TryParseInt(string input, float min, float max, out int value, bool percent = false)
-        {
-            if (!float.TryParse(input.TrimEnd('%'), out float maybeMinValue))
-            {
-                value = 0;
-                return false;
-            }
-
-            if (percent)
-            {
-                maybeMinValue /= 100f;
-            }
-
-            value = (int) Mathf.Clamp(maybeMinValue, min, max);
-            return true;
-        }
-
-        private static void ValidateFocusChange(
-            ref Vector2 focusCache,
-            ref string focusBufferCache,
-            Rect region,
-            float value,
-            bool percents
-        )
-        {
-            if (focusCache != region.position)
-            {
-                focusCache = region.position;
-                focusBufferCache = percents ? $"{value * 100f}%" : value.ToString(CultureInfo.InvariantCulture);
+                if (!result.IsFullyTypedNumber<float>())
+                {
+                    return;
+                }
+                
+                NumberHelper.ParseFloat(result, ref value, ref buffer, min, max, false);
             }
         }
     }

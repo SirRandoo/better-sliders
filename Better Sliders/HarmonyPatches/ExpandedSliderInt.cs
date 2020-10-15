@@ -53,24 +53,21 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
             }
             if (Mouse.IsOver(__state.MinimumDrawRect) && __state.ShouldFocusField)
             {
-                GUI.FocusControl($"TextField{__state.MinimumDrawRect.y:F0}{__state.MinimumDrawRect.x:F0}");
+                GUI.FocusControl("TextField" + __state.MinimumDrawRect.y.ToString("F0") + __state.MinimumDrawRect.x.ToString("F0"));
             }
 
             if (Mouse.IsOver(__state.MaximumDrawRect) && __state.ShouldFocusField)
             {
-                GUI.FocusControl($"TextField{__state.MaximumDrawRect.y:F0}{__state.MaximumDrawRect.x:F0}");
+                GUI.FocusControl("TextField" + __state.MaximumDrawRect.y.ToString("F0") + __state.MaximumDrawRect.x.ToString("F0"));
             }
 
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
-            UIHelper.MinMaxSpinboxes(
-                __state.MinimumDrawRect,
-                __state.MaximumDrawRect,
-                ref range.min,
-                ref range.max,
-                min,
-                max
-            );
+
+            var minBuffer = range.min.ToString("N0");
+            var maxBuffer = range.max.ToString("N0");
+            UIHelper.Spinbox(__state.MinimumDrawRect, ref range.min, ref minBuffer, min, range.max);
+            UIHelper.Spinbox(__state.MaximumDrawRect, ref range.max, ref maxBuffer, range.min, max);
             Text.Font = cache;
         }
     }
