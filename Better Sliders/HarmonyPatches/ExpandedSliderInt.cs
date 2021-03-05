@@ -64,8 +64,9 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
-            var minBuffer = range.min.ToString("N0");
-            var maxBuffer = range.max.ToString("N0");
+
+            var minBuffer = range.min.ToString();
+            var maxBuffer = range.max.ToString();
             UIHelper.Spinbox(__state.MinimumDrawRect, ref range.min, ref minBuffer, min, range.max);
             UIHelper.Spinbox(__state.MaximumDrawRect, ref range.max, ref maxBuffer, range.min, max);
             Text.Font = cache;
