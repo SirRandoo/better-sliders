@@ -23,8 +23,16 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         private static void Prefix(Rect rect, [NotNull] ref ExpandedState __state)
         {
-            __state = new ExpandedState();
-            
+            __state = new ExpandedState
+            {
+                ShouldRender = !UIHelper.IsRenderDisabled()
+            };
+
+            if (!__state.ShouldRender)
+            {
+                return;
+            }
+
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
@@ -47,7 +55,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         [UsedImplicitly]
         private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, [NotNull] ref ExpandedState __state)
         {
-            if (!Mouse.IsOver(rect))
+            if (!__state.ShouldRender || !Mouse.IsOver(rect))
             {
                 return;
             }

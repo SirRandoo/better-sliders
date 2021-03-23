@@ -107,5 +107,10 @@ namespace SirRandoo.BetterSliders.Helpers
                 NumberHelper.ParseFloat(result, ref value, ref buffer, min, max, false);
             }
         }
+
+        public static bool IsRenderDisabled()
+        {
+            return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+        }
     }
 }
