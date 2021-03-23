@@ -21,7 +21,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
 
         [UsedImplicitly]
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static void Prefix(Rect rect, ref ExpandedState __state)
+        private static void Prefix(Rect rect, [NotNull] ref ExpandedState __state)
         {
             __state = new ExpandedState();
             
@@ -35,7 +35,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         }
 
         [UsedImplicitly]
-        private static void Postfix(Rect rect, ref float __result, float leftValue, float rightValue, float roundTo, ref ExpandedState __state)
+        private static void Postfix(Rect rect, ref float __result, float leftValue, float rightValue, float roundTo, [NotNull] ref ExpandedState __state)
         {
             if (!Mouse.IsOver(rect))
             {

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
@@ -66,8 +67,8 @@ namespace SirRandoo.BetterSliders.Helpers
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         private static void ResetValue<T>(
-            ref T val,
-            ref string buffer,
+            [CanBeNull] ref T val,
+            [NotNull] ref string buffer,
             float min,
             float max)
         {
@@ -79,6 +80,7 @@ namespace SirRandoo.BetterSliders.Helpers
             buffer = ToStringTypedIn(val);
         }
         
+        [NotNull]
         private static string ToStringTypedIn<T>(T val)
         {
             return typeof(T) == typeof(float) 
@@ -87,7 +89,7 @@ namespace SirRandoo.BetterSliders.Helpers
         }
 
         public static bool IsPartiallyOrFullyTypedNumber<T>(
-            string s,
+            [NotNull] string s,
             float min)
         {
             return s == ""
@@ -122,12 +124,12 @@ namespace SirRandoo.BetterSliders.Helpers
             return !(typeof(T) == typeof(int)) || s.ContainsOnlyCharacters("-0123456789");
         }
 
-        public static int CharacterCount(this string s, char c)
+        public static int CharacterCount([NotNull] this string s, char c)
         {
             return s.Count(t => (int) t == (int) c);
         }
         
-        private static bool ContainsOnlyCharacters(this string s, string allowedChars)
+        private static bool ContainsOnlyCharacters([NotNull] this string s, string allowedChars)
         {
             return s.All(allowedChars.Contains);
         }
