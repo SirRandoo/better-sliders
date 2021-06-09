@@ -10,29 +10,25 @@ using Verse;
 namespace SirRandoo.BetterSliders.HarmonyPatches
 {
     [HarmonyPatch]
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class ExpandedSliderInt
     {
-        [UsedImplicitly]
         private static IEnumerable<MethodBase> TargetMethods()
         {
             yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.IntRange));
         }
 
-        [UsedImplicitly]
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         private static void Prefix(Rect rect, [NotNull] ref ExpandedState __state)
         {
-            __state = new ExpandedState
-            {
-                ShouldRender = !UIHelper.IsRenderDisabled()
-            };
+            __state = new ExpandedState {ShouldRender = !UIHelper.IsRenderDisabled()};
 
             if (!__state.ShouldRender)
             {
                 return;
             }
-            
+
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
@@ -47,26 +43,32 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
                 distributedWidth,
                 Text.LineHeight
             );
-            
+
             __state.ShouldFocusField = __state.MinimumDrawRect.WasClicked() || __state.MaximumDrawRect.WasClicked();
             Text.Font = cache;
         }
 
-        [UsedImplicitly]
-        private static void Postfix(Rect rect, ref IntRange range, int min, int max, [NotNull] ref ExpandedState __state)
+        private static void Postfix(
+            Rect rect,
+            ref IntRange range,
+            int min,
+            int max,
+            [NotNull] ref ExpandedState __state
+        )
         {
             if (!__state.ShouldRender || !Mouse.IsOver(rect))
             {
                 return;
             }
+
             if (Mouse.IsOver(__state.MinimumDrawRect) && __state.ShouldFocusField)
             {
-                GUI.FocusControl("TextField" + __state.MinimumDrawRect.y.ToString("F0") + __state.MinimumDrawRect.x.ToString("F0"));
+                GUI.FocusControl($"TextField{__state.MinimumDrawRect.y:F0}{__state.MinimumDrawRect.x:F0}");
             }
 
             if (Mouse.IsOver(__state.MaximumDrawRect) && __state.ShouldFocusField)
             {
-                GUI.FocusControl("TextField" + __state.MaximumDrawRect.y.ToString("F0") + __state.MaximumDrawRect.x.ToString("F0"));
+                GUI.FocusControl($"TextField{__state.MaximumDrawRect.y:F0}{__state.MaximumDrawRect.x:F0}");
             }
 
             GameFont cache = Text.Font;

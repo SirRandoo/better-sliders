@@ -8,9 +8,7 @@ namespace SirRandoo.BetterSliders
     [UsedImplicitly]
     public class BetterSliders : Mod
     {
-        public BetterSliders(ModContentPack content) : base(content)
-        {
-        }
+        public BetterSliders(ModContentPack content) : base(content) { }
     }
 
     [UsedImplicitly]

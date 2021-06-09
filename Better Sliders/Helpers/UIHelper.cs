@@ -26,7 +26,14 @@ namespace SirRandoo.BetterSliders.Helpers
             }
         }
 
-        public static void Spinbox(Rect region, ref int value, ref string buffer, float min = 0f, float max = 1E+09f, bool percent = false)
+        public static void Spinbox(
+            Rect region,
+            ref int value,
+            ref string buffer,
+            float min = 0f,
+            float max = 1E+09f,
+            bool percent = false
+        )
         {
             buffer ??= value.ToString();
 
@@ -50,7 +57,7 @@ namespace SirRandoo.BetterSliders.Helpers
                 {
                     result = result.Substring(0, result.Length - 1);
                 }
-                
+
                 if (result == buffer || !NumberHelper.IsPartiallyOrFullyTypedNumber<int>(result, min))
                 {
                     return;
@@ -62,12 +69,19 @@ namespace SirRandoo.BetterSliders.Helpers
                 {
                     return;
                 }
-                
+
                 NumberHelper.ParseInteger(result, ref value, ref buffer, min, max, false);
             }
         }
 
-        public static void DoubleSpinbox(Rect region, ref float value, ref string buffer, float min = 0f, float max = 1E+09f, bool percent = false)
+        public static void DoubleSpinbox(
+            Rect region,
+            ref float value,
+            ref string buffer,
+            float min = 0f,
+            float max = 1E+09f,
+            bool percent = false
+        )
         {
             buffer ??= value.ToString("0.0#########");
 
@@ -80,12 +94,12 @@ namespace SirRandoo.BetterSliders.Helpers
             GUI.SetNextControlName(controlName);
 
             string result = GUI.TextField(region, buffer, Text.CurTextFieldStyle);
-            
+
             if (percent && result.EndsWith("%"))
             {
                 result = result.Substring(0, result.Length - 1);
             }
-            
+
             if (GUI.GetNameOfFocusedControl() != controlName)
             {
                 NumberHelper.ParseFloat(buffer, ref value, ref buffer, min, max, true);
@@ -103,7 +117,7 @@ namespace SirRandoo.BetterSliders.Helpers
                 {
                     return;
                 }
-                
+
                 NumberHelper.ParseFloat(result, ref value, ref buffer, min, max, false);
             }
         }
