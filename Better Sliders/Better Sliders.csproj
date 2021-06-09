@@ -68,7 +68,7 @@
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.2.2900" Condition="$(DefineConstants.Contains('RW12'))"/>
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.2.2905" Condition="$(DefineConstants.Contains('RW12'))"/>
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.1.2654" Condition="$(DefineConstants.Contains('RW11'))"/>
         <PackageReference Include="Lib.Harmony" Version="2.0.4" ExcludeAssets="runtime"/>
     </ItemGroup>
