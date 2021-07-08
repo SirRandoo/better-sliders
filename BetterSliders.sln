@@ -7,6 +7,7 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		Release 1.1|Any CPU = Release 1.1|Any CPU
 		Release 1.2|Any CPU = Release 1.2|Any CPU
+		Release 1.3|Any CPU = Release 1.3|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4E900CA5-F80D-4599-B896-EA062E87A617}.Debug|Any CPU.ActiveCfg = Release|Any CPU
@@ -15,5 +16,7 @@ Global
 		{4E900CA5-F80D-4599-B896-EA062E87A617}.Release 1.1|Any CPU.Build.0 = 1.1 release|Any CPU
 		{4E900CA5-F80D-4599-B896-EA062E87A617}.Release 1.2|Any CPU.ActiveCfg = 1.2 release|Any CPU
 		{4E900CA5-F80D-4599-B896-EA062E87A617}.Release 1.2|Any CPU.Build.0 = 1.2 release|Any CPU
+		{4E900CA5-F80D-4599-B896-EA062E87A617}.Release 1.3|Any CPU.ActiveCfg = Release 1.3|Any CPU
+		{4E900CA5-F80D-4599-B896-EA062E87A617}.Release 1.3|Any CPU.Build.0 = Release 1.3|Any CPU
 	EndGlobalSection
 EndGlobal
