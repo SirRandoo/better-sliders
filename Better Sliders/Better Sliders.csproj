@@ -66,6 +66,7 @@
         <Compile Include="HarmonyPatches\ExpandedSliderFloat.cs" />
         <Compile Include="HarmonyPatches\ExpandedSliderHorizontal.cs" />
         <Compile Include="HarmonyPatches\ExpandedSliderInt.cs" />
+        <Compile Include="HarmonyPatches\Patcher.cs" />
         <Compile Include="Helpers\NumberHelper.cs" />
         <Compile Include="Helpers\UIHelper.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
