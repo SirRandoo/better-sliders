@@ -1,6 +1,6 @@
 ﻿// MIT License
 //
-// Copyright (c) 2021 SirRandoo
+// Copyright (c) 2022 SirRandoo
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using UnityEngine;
-
 namespace SirRandoo.BetterSliders
 {
-    public class ExpandedState
+    /// <summary>
+    ///     The various mouse buttons the mod could care about.
+    /// </summary>
+    public enum MouseButtonCode
     {
-        public bool ShouldRender { get; set; }
-        public bool ShouldFocusField { get; set; }
-        public Rect HorizontalDrawRect { get; set; }
-        public Rect MinimumDrawRect { get; set; }
-        public Rect MaximumDrawRect { get; set; }
-        public static bool AlwaysOn => SliderSettings.DisplayStyleRaw.Equals(nameof(SliderSettings.Style.AlwaysOn));
+        /// <summary>
+        ///     The left mouse button.
+        /// </summary>
+        Left = 0,
+        /// <summary>
+        ///     The right mouse button.
+        /// </summary>
+        Right = 1,
+        /// <summary>
+        ///     The middle mouse button.
+        /// </summary>
+        Middle = 1
     }
 }

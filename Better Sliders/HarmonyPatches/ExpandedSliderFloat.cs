@@ -25,7 +25,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
-using SirRandoo.BetterSliders.Helpers;
+using SirRandoo.BetterSliders.Entities;
+using Unity.Collections;
 using UnityEngine;
 using Verse;
 
@@ -42,14 +43,10 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         }
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static void Prefix(ref Rect rect, [NotNull] ref ExpandedState __state)
+        private static void Prefix(ref Rect rect, FloatRange range, [NotNull] ref NumberEntryController __state)
         {
-            __state = new ExpandedState {ShouldRender = ExpandedState.AlwaysOn || !UIHelper.IsRenderDisabled()};
-
-            if (!__state.ShouldRender)
-            {
-                return;
-            }
+            __state = SliderController.ControllerForPosition(rect);
+            __state.SetStateIfNull(range.min, range.max);
 
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
@@ -58,59 +55,39 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
 
             float usedWidth = rect.width - gapRect.width - 10f;
             float distributedWidth = usedWidth / 4f;
-            __state.MinimumDrawRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
-            __state.MaximumDrawRect = new Rect(
-                gapRect.x + gapRect.width + __state.MinimumDrawRect.width + 5f,
-                rect.y,
-                distributedWidth,
-                Text.LineHeight
-            );
+            __state.MinimumEntryRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
+            __state.MaximumEntryRect = new Rect(gapRect.x + gapRect.width + __state.MinimumEntryRect.Value.width + 5f, rect.y, distributedWidth, Text.LineHeight);
 
-            __state.ShouldFocusField = __state.MinimumDrawRect.WasClicked() || __state.MaximumDrawRect.WasClicked();
             Text.Font = cache;
 
-            if (SliderSettings.DisplayStyleRaw.Equals(nameof(SliderSettings.Style.AlwaysOn)))
+            if (SliderSettings.IsAlwaysOn)
             {
                 rect = new Rect(
-                    __state.MinimumDrawRect.x + __state.MinimumDrawRect.width + 5f,
+                    __state.MinimumEntryRect.Value.x + __state.MinimumEntryRect.Value.width + 5f,
                     rect.y,
-                    rect.width - __state.MinimumDrawRect.width - __state.MaximumDrawRect.width - 10f,
+                    rect.width - __state.MaximumEntryRect.Value.width - __state.MaximumEntryRect.Value.width - 10f,
                     rect.height
                 );
             }
         }
 
-        private static void Postfix(
-            Rect rect,
-            ref FloatRange range,
-            float min,
-            float max,
-            ToStringStyle valueStyle,
-            [NotNull] ref ExpandedState __state
-        )
+        private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, [NotNull] ref NumberEntryController __state)
         {
-            if (!ExpandedState.AlwaysOn && (!__state.ShouldRender || !Mouse.IsOver(rect)))
-            {
-                return;
-            }
-
-            if (Mouse.IsOver(__state.MinimumDrawRect) && __state.ShouldFocusField)
-            {
-                GUI.FocusControl($"TextField{__state.MinimumDrawRect.y:F0}{__state.MinimumDrawRect.x:F0}");
-            }
-
-            if (Mouse.IsOver(__state.MaximumDrawRect) && __state.ShouldFocusField)
-            {
-                GUI.FocusControl($"TextField{__state.MaximumDrawRect.y:F0}{__state.MaximumDrawRect.x:F0}");
-            }
-
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
-            var minBuffer = range.min.ToString("0.0#########");
-            var maxBuffer = range.max.ToString("0.0#########");
-            UIHelper.DoubleSpinbox(__state.MinimumDrawRect, ref range.min, ref minBuffer, min, range.max);
-            UIHelper.DoubleSpinbox(__state.MaximumDrawRect, ref range.max, ref maxBuffer, range.min, max);
+            __state.BeginHeuristics(rect);
+
+            if (!__state.IsCurrentlyActive())
+            {
+                __state.Draw(ref range.min, ref range.max);
+            }
+
+            __state.EndHeuristics();
+
+            range.min = Mathf.Clamp(range.min, min, range.max);
+            range.max = Mathf.Clamp(range.max, range.min, max);
+
             Text.Font = cache;
         }
     }

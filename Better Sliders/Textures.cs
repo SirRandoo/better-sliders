@@ -1,6 +1,6 @@
 ﻿// MIT License
 //
-// Copyright (c) 2021 SirRandoo
+// Copyright (c) 2022 SirRandoo
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,27 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
 namespace SirRandoo.BetterSliders
 {
-    [UsedImplicitly]
-    public class BetterSliders : Mod
+    [StaticConstructorOnStartup]
+    public static class Textures
     {
-        public BetterSliders(ModContentPack content) : base(content)
-        {
-            GetSettings<SliderSettings>();
-        }
-
-        public override string SettingsCategory() => Content.Name;
-
-        public override void DoSettingsWindowContents(Rect region)
-        {
-            SliderSettings.PrepareState();
-
-            SliderSettings.Draw(region);
-        }
+        public static readonly Texture2D HeuristicsCircle = ContentFinder<Texture2D>.Get("UI/HeuristicsCircle");
     }
 }

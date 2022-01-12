@@ -25,7 +25,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
-using SirRandoo.BetterSliders.Helpers;
+using SirRandoo.BetterSliders.Entities;
 using UnityEngine;
 using Verse;
 
@@ -42,64 +42,38 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         }
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static void Prefix(ref Rect rect, [NotNull] ref ExpandedState __state)
+        private static void Prefix(ref Rect rect, float value, [NotNull] ref NumberEntryController __state)
         {
-            __state = new ExpandedState {ShouldRender = ExpandedState.AlwaysOn || !UIHelper.IsRenderDisabled()};
-
-            if (!__state.ShouldRender)
-            {
-                return;
-            }
+            __state = SliderController.ControllerForPosition(rect);
+            __state.SetStateIfNull(value);
 
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
             float fieldWidth = rect.width / 5f;
-            __state.HorizontalDrawRect = new Rect(
-                rect.x + rect.width - fieldWidth,
-                rect.y,
-                fieldWidth,
-                Text.LineHeight
-            );
-            __state.ShouldFocusField = __state.HorizontalDrawRect.WasClicked();
+            __state.MinimumEntryRect = new Rect(rect.x + rect.width - fieldWidth, rect.y, fieldWidth, Text.LineHeight);
             Text.Font = cache;
 
-            if (SliderSettings.DisplayStyleRaw.Equals(nameof(SliderSettings.Style.AlwaysOn)))
+            if (SliderSettings.IsAlwaysOn)
             {
-                rect = new Rect(rect.x, rect.y, rect.width - __state.HorizontalDrawRect.width - 5f, rect.height);
+                rect = new Rect(rect.x, rect.y, rect.width - __state.MinimumEntryRect.Value.width - 5f, rect.height);
             }
         }
 
-        private static void Postfix(
-            Rect rect,
-            ref float __result,
-            float leftValue,
-            float rightValue,
-            float roundTo,
-            [NotNull] ref ExpandedState __state
-        )
+        private static void Postfix(Rect rect, ref float __result, float leftValue, float rightValue, float roundTo, [NotNull] ref NumberEntryController __state)
         {
-            if (!ExpandedState.AlwaysOn && (!__state.ShouldRender || !Mouse.IsOver(rect)))
-            {
-                return;
-            }
-
-            if (__state.ShouldFocusField)
-            {
-                GUI.FocusControl($"TextField{__state.HorizontalDrawRect.y:F0}{__state.HorizontalDrawRect.x:F0}");
-            }
-
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
-            var fieldBuffer = __result.ToString("0.0#########");
-            UIHelper.DoubleSpinbox(
-                __state.HorizontalDrawRect,
-                ref __result,
-                ref fieldBuffer,
-                leftValue <= rightValue ? leftValue : rightValue,
-                rightValue >= leftValue ? rightValue : leftValue
-            );
+            __state.BeginHeuristics(rect);
+
+            if (__state.IsCurrentlyActive())
+            {
+                __state.Draw(ref __result);
+            }
+
+            __state.EndHeuristics();
+
             Text.Font = cache;
 
             if (roundTo > 0.0)
