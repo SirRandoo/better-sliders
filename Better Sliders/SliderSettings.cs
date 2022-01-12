@@ -36,8 +36,8 @@ namespace SirRandoo.BetterSliders
         public static string DisplayStyleRaw = Style.Hover.ToString();
 
         public static List<FloatMenuOption> StyleOptions;
-        public static float HeuristicsBeginDistance = 5f;
-        public static float HeuristicsEndDistance = 100f;
+        public static float HeuristicsBeginDistance = 35f;
+        public static float HeuristicsEndDistance = 110f;
 
         private static bool _isDrawingBeginHeuristics;
         private static bool _isDrawingEndHeuristics;
@@ -206,8 +206,8 @@ namespace SirRandoo.BetterSliders
         public override void ExposeData()
         {
             Scribe_Values.Look(ref DisplayStyleRaw, "displayStyle", Style.Hover.ToString());
-            Scribe_Values.Look(ref HeuristicsBeginDistance, "heuristicsBeginDistance", 5f);
-            Scribe_Values.Look(ref HeuristicsEndDistance, "heuristicsEndDistance", 100f);
+            Scribe_Values.Look(ref HeuristicsBeginDistance, "heuristicsBeginDistance", 35f);
+            Scribe_Values.Look(ref HeuristicsEndDistance, "heuristicsEndDistance", 110f);
         }
         public static void PrepareState()
         {
