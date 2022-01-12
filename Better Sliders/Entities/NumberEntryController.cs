@@ -188,7 +188,7 @@ namespace SirRandoo.BetterSliders.Entities
 
         public void BeginHeuristics(Rect region)
         {
-            if (region.Contains(Event.current.mousePosition) || SliderSettings.DisplayStyleRaw == nameof(SliderSettings.Style.AlwaysOn))
+            if (region.Contains(Event.current.mousePosition))
             {
                 return;
             }
@@ -220,6 +220,11 @@ namespace SirRandoo.BetterSliders.Entities
                 GUI.color = new Color(color.r, color.g, color.b, 1f);
                 _isEffectivelyDisabled = false;
             }
+
+            if (SliderSettings.IsAlwaysOn)
+            {
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1f);
+            }
         }
 
         public void EndHeuristics()
@@ -248,7 +253,7 @@ namespace SirRandoo.BetterSliders.Entities
 
         private void TryFocusControl(string name)
         {
-            if (SliderSettings.DisplayStyleRaw == nameof(SliderSettings.Style.AlwaysOn) || GUI.GetNameOfFocusedControl() == name || !this.IsControllerClosest())
+            if (GUI.GetNameOfFocusedControl() == name || !this.IsControllerClosest())
             {
                 return;
             }
