@@ -66,6 +66,8 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
+        public int GroupId { get; set; }
+
         public System.WeakReference<Window> Parent { get; set; }
 
         public bool IsCurrentlyActive()

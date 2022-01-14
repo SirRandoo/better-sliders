@@ -33,6 +33,7 @@ namespace SirRandoo.BetterSliders
     internal static class SliderController
     {
         private static readonly Dictionary<int, List<NumberEntryController>> WindowNumberControllers = new();
+        private static readonly int BeginGroupHashCode = "BeginGroup".GetHashCode();
 
         [NotNull]
         internal static NumberEntryController[] ControllersForWindow([NotNull] Window window) =>
@@ -43,11 +44,13 @@ namespace SirRandoo.BetterSliders
         [NotNull]
         internal static NumberEntryController ControllerForPosition(Rect region)
         {
+            int groupId = GUIUtility.GetControlID(BeginGroupHashCode, FocusType.Passive);
+
             NumberEntryController controller;
 
             if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
             {
-                controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow) };
+                controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
 
                 controllers = new List<NumberEntryController> { controller };
                 WindowNumberControllers[Find.WindowStack.currentlyDrawnWindow.ID] = controllers;
@@ -57,6 +60,11 @@ namespace SirRandoo.BetterSliders
 
             foreach (NumberEntryController c in controllers)
             {
+                if (groupId != c.GroupId)
+                {
+                    continue;
+                }
+                
                 if (c.MinimumEntryRect.HasValue && c.MinimumEntryRect.Value.Overlaps(region))
                 {
                     return c;
@@ -68,7 +76,7 @@ namespace SirRandoo.BetterSliders
                 }
             }
 
-            controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow) };
+            controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
             controllers.Add(controller);
 
             return controller;
