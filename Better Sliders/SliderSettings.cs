@@ -126,9 +126,6 @@ namespace SirRandoo.BetterSliders
                 Text.Font = GameFont.Small;
             }
 
-            listing.Label(HeuristicsBeginDistance.ToString("N0"));
-            listing.Label(HeuristicsEndDistance.ToString("N0"));
-
             listing.End();
             GUI.EndGroup();
         }
