@@ -334,9 +334,15 @@ namespace SirRandoo.BetterSliders.Entities
         }
 
         [NotNull]
-        internal string EndLogging()
+        internal void EndLogging()
         {
-            return _logBuilder.ToString();
+            if (_logBuilder == null)
+            {
+                return;
+            }
+
+            Log.Message(_logBuilder.ToString());
+            _logBuilder = null;
         }
     }
 }

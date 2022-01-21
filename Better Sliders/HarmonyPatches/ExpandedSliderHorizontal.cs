@@ -65,16 +65,22 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
-            __state.BeginLogging();
             __state.BeginHeuristics(rect);
 
-            if (__state.IsCurrentlyActive())
+            bool active = __state.IsCurrentlyActive();
+
+            if (active)
             {
+                __state.BeginLogging();
                 __state.Draw(ref __result);
             }
 
             __state.EndHeuristics();
-            Log.Message(__state.EndLogging());
+
+            if (!active)
+            {
+                __state.EndLogging();
+            }
 
             Text.Font = cache;
 
