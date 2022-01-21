@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using JetBrains.Annotations;
 using SirRandoo.BetterSliders.Helpers;
 using UnityEngine;
 using Verse;
@@ -44,6 +46,7 @@ namespace SirRandoo.BetterSliders.Entities
         private Rect? _minimumEntryRect;
         private float _minimumInteractionTick;
         private Color? _previousColor;
+        private StringBuilder _logBuilder;
         private bool MinimumInteractedRecently => Mathf.Abs(Time.unscaledTime - _minimumInteractionTick) <= 1f;
         private bool MaximumInteractedRecently => Mathf.Abs(Time.unscaledTime - _maximumInteractionTick) <= 1f;
 
@@ -119,12 +122,17 @@ namespace SirRandoo.BetterSliders.Entities
 
         public void Draw(ref float value)
         {
+            _logBuilder?.Append("  - Attempting to draw single number field\n");
+
             DrawMinimumEntry(ref value);
         }
         private void DrawMinimumEntry(ref float value)
         {
             if (MinimumEntryRect.HasValue)
             {
+                _logBuilder?.Append($"    - Drawing minimum entry field (id: {_minimumEntryName}) @ [x: {MinimumEntryRect.Value.x:N}, y: {MinimumEntryRect.Value.y:N}]");
+                _logBuilder?.Append($" with a size of [width: {MinimumEntryRect.Value.width:N}, height: {MinimumEntryRect.Value.height:N}]\n");
+
                 GUI.SetNextControlName(_minimumEntryName);
 
                 if (UiHelper.NumberField(MinimumEntryRect.Value, ref _minimumBuffer, ref _minimum, ref _minimumBufferValid))
@@ -138,23 +146,30 @@ namespace SirRandoo.BetterSliders.Entities
 
             if (!MinimumInteractedRecently)
             {
+                _logBuilder?.Append("    - Minimum entry field hasn't been interacted with recently; updating field with slider's value\n");
                 SetMinimumValue(value);
             }
             else
             {
+                _logBuilder?.Append("    - Minimum entry field has been interacted with recently; updating slider's value\n");
                 value = _minimum;
             }
         }
 
         public void Draw(ref float minimum, ref float maximum)
         {
+            _logBuilder?.Append("  - Attempting to draw min/max number fields\n");
             DrawMinimumEntry(ref minimum);
             DrawMaximumEntry(ref maximum);
         }
+
         private void DrawMaximumEntry(ref float maximum)
         {
             if (MaximumEntryRect.HasValue)
             {
+                _logBuilder?.Append($"    - Drawing maximum entry field (id: {_maximumEntryName}) @");
+                _logBuilder?.Append($" [x: {MaximumEntryRect.Value.x:N}, y: {MaximumEntryRect.Value.y:N}, group: {GroupId:N}]");
+                _logBuilder?.Append($" with a size of [width: {MaximumEntryRect.Value.width:N}, height: {MaximumEntryRect.Value.height:N}]\n");
                 GUI.SetNextControlName(_maximumEntryName);
 
                 if (UiHelper.NumberField(MaximumEntryRect.Value, ref _maximumBuffer, ref _maximum, ref _maximumBufferValid))
@@ -168,16 +183,19 @@ namespace SirRandoo.BetterSliders.Entities
 
             if (!MaximumInteractedRecently)
             {
+                _logBuilder?.Append("    - Maximum entry field hasn't been interacted with recently; updating field with slider's value\n");
                 SetMaximumValue(maximum);
             }
             else
             {
+                _logBuilder?.Append("    - Maximum entry field has been interacted with recently; updating slider's value\n");
                 maximum = _maximum;
             }
         }
 
         public void Draw(ref int minimum, ref int maximum)
         {
+            _logBuilder?.Append("  - Attempting to draw min/max integer fields\n");
             float minProxy = minimum;
             float maxProxy = maximum;
 
@@ -190,21 +208,28 @@ namespace SirRandoo.BetterSliders.Entities
 
         public void BeginHeuristics(Rect region)
         {
+            _logBuilder?.Append($"  - Beginning heuristics at [x: {region.x:N}, y: {region.y:N}, group: {GroupId:N}]");
+            _logBuilder?.Append($" with a size of [width: {region.width:N}, height: {region.height:N}]\n");
+
             if (region.Contains(Event.current.mousePosition))
             {
+                _logBuilder?.Append("    - Mouse isn't over slider position\n");
                 return;
             }
 
             float distance = GenUI.DistFromRect(region, Event.current.mousePosition);
+            _logBuilder?.Append($"    - Mouse distance from slider: {distance:N}");
 
             if (distance >= SliderSettings.HeuristicsEndDistance)
             {
+                _logBuilder?.Append("      - Mouse is too far from slider; hiding number field\n");
                 Color color = _previousColor ?? Color.white;
                 GUI.color = new Color(color.r, color.g, color.b, 0f);
                 _isEffectivelyDisabled = true;
             }
             else if (distance >= SliderSettings.HeuristicsBeginDistance)
             {
+                _logBuilder?.Append("      - Mouse is within the fade out distance; adjusting number field's visibility to match\n");
                 _previousColor ??= GUI.color;
 
                 GUI.color = new Color(
@@ -218,6 +243,7 @@ namespace SirRandoo.BetterSliders.Entities
             }
             else if (distance <= SliderSettings.HeuristicsBeginDistance)
             {
+                _logBuilder?.Append("      - Mouse isn't within fade out distance; ensuring number field isn't transparent\n");
                 Color color = _previousColor ?? Color.white;
                 GUI.color = new Color(color.r, color.g, color.b, 1f);
                 _isEffectivelyDisabled = false;
@@ -225,17 +251,20 @@ namespace SirRandoo.BetterSliders.Entities
 
             if (SliderSettings.IsAlwaysOn)
             {
+                _logBuilder?.Append("    - Mode is 'always on'; ensuring number fields aren't transparent\n");
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1f);
             }
         }
 
         public void EndHeuristics()
         {
+            _logBuilder?.Append("  - Ending mouse heuristics\n");
             GUI.color = _previousColor ?? Color.white;
             _previousColor = null;
 
             if (_isEffectivelyDisabled)
             {
+                _logBuilder?.Append("    - Number field was marked as irrelevant; attempting to clear focus\n");
                 TryClearFocusIfHas();
             }
         }
@@ -265,18 +294,23 @@ namespace SirRandoo.BetterSliders.Entities
 
         private void TryProcessInteraction()
         {
+            _logBuilder?.Append("  - Attempting to process interaction\n");
+
             if (SliderSettings.DisplayStyleRaw == nameof(SliderSettings.Style.AlwaysOn))
             {
+                _logBuilder?.Append("    - Display mode is 'always on'; ignoring interaction\n");
                 return;
             }
 
             if (MinimumEntryRect.HasValue && GUI.GetNameOfFocusedControl() == _minimumEntryName && IsCurrentEventInteraction(MinimumEntryRect.Value))
             {
+                _logBuilder?.Append("    - User interacted with minimum number field; updating relevant interaction tick\n");
                 _minimumInteractionTick = Time.unscaledTime;
             }
 
             if (MaximumEntryRect.HasValue && GUI.GetNameOfFocusedControl() == _maximumEntryName && IsCurrentEventInteraction(MaximumEntryRect.Value))
             {
+                _logBuilder?.Append("    - User interacted with maximum number field; updating relevant interaction tick\n");
                 _maximumInteractionTick = Time.unscaledTime;
             }
         }
@@ -292,6 +326,17 @@ namespace SirRandoo.BetterSliders.Entities
                 default:
                     return false;
             }
+        }
+
+        internal void BeginLogging()
+        {
+            _logBuilder = new StringBuilder();
+        }
+
+        [NotNull]
+        internal string EndLogging()
+        {
+            return _logBuilder.ToString();
         }
     }
 }
