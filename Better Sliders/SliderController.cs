@@ -97,6 +97,14 @@ namespace SirRandoo.BetterSliders
 
         internal static void RemoveControllerForWindow([NotNull] Window window)
         {
+            if (WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers))
+            {
+                for (var i = 0; i < controllers.Count; i++)
+                {
+                    controllers[i].EndLogging();
+                }
+            }
+
             WindowNumberControllers.Remove(window.ID);
         }
 

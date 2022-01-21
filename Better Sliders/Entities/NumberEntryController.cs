@@ -130,7 +130,8 @@ namespace SirRandoo.BetterSliders.Entities
         {
             if (MinimumEntryRect.HasValue)
             {
-                _logBuilder?.Append($"    - Drawing minimum entry field (id: {_minimumEntryName}) @ [x: {MinimumEntryRect.Value.x:N}, y: {MinimumEntryRect.Value.y:N}]");
+                _logBuilder?.Append($"    - Drawing minimum entry field (id: {_minimumEntryName}) @");
+                _logBuilder?.Append($" [x: {MinimumEntryRect.Value.x:N}, y: {MinimumEntryRect.Value.y:N}, group: {GroupId:N}]");
                 _logBuilder?.Append($" with a size of [width: {MinimumEntryRect.Value.width:N}, height: {MinimumEntryRect.Value.height:N}]\n");
 
                 GUI.SetNextControlName(_minimumEntryName);
@@ -333,7 +334,6 @@ namespace SirRandoo.BetterSliders.Entities
             _logBuilder = new StringBuilder();
         }
 
-        [NotNull]
         internal void EndLogging()
         {
             if (_logBuilder == null)
