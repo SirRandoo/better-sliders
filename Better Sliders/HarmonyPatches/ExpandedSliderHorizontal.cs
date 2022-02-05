@@ -42,44 +42,46 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         }
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static void Prefix(ref Rect rect, float value, [NotNull] ref NumberEntryController __state)
+        private static void Prefix(ref Rect rect, float value)
         {
-            __state = SliderController.ControllerForPosition(rect);
-            __state.SetStateIfNull(value);
+            NumberEntryController controller = SliderController.ControllerForPosition(rect);
+            controller.SetStateIfNull(value);
 
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
             float fieldWidth = rect.width / 5f;
-            __state.MinimumEntryRect = new Rect(rect.x + rect.width - fieldWidth, rect.y, fieldWidth, Text.LineHeight);
+            controller.MinimumEntryRect = new Rect(rect.x + rect.width - fieldWidth, rect.y, fieldWidth, Text.LineHeight);
             Text.Font = cache;
 
             if (SliderSettings.IsAlwaysOn)
             {
-                rect = new Rect(rect.x, rect.y, rect.width - __state.MinimumEntryRect.Value.width - 5f, rect.height);
+                rect = new Rect(rect.x, rect.y, rect.width - controller.MinimumEntryRect.Value.width - 5f, rect.height);
             }
         }
 
-        private static void Postfix(Rect rect, ref float __result, float leftValue, float rightValue, float roundTo, [NotNull] ref NumberEntryController __state)
+        private static void Postfix(Rect rect, ref float __result, float leftValue, float rightValue, float roundTo)
         {
+            NumberEntryController controller = SliderController.ControllerForPosition(rect);
+
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
-            __state.BeginHeuristics(rect);
+            controller.BeginHeuristics(rect);
 
-            bool active = __state.IsCurrentlyActive();
+            bool active = controller.IsCurrentlyActive();
 
             if (active)
             {
-                __state.BeginLogging();
-                __state.Draw(ref __result);
+                controller.BeginLogging();
+                controller.Draw(ref __result);
             }
 
-            __state.EndHeuristics();
+            controller.EndHeuristics();
 
             if (!active)
             {
-                __state.EndLogging();
+                controller.EndLogging();
             }
 
             Text.Font = cache;

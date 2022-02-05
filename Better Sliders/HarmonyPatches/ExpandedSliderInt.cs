@@ -42,10 +42,10 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
         }
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static void Prefix(ref Rect rect, IntRange range, [NotNull] ref NumberEntryController __state)
+        private static void Prefix(ref Rect rect, IntRange range)
         {
-            __state = SliderController.ControllerForPosition(rect);
-            __state.SetStateIfNull(range.min, range.max);
+            NumberEntryController controller = SliderController.ControllerForPosition(rect);
+            controller.SetStateIfNull(range.min, range.max);
 
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
@@ -54,37 +54,38 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
 
             float usedWidth = rect.width - gapRect.width - 10f;
             float distributedWidth = usedWidth / 4f;
-            __state.MinimumEntryRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
-            __state.MaximumEntryRect = new Rect(gapRect.x + gapRect.width + __state.MinimumEntryRect.Value.width + 5f, rect.y, distributedWidth, Text.LineHeight);
+            controller.MinimumEntryRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
+            controller.MaximumEntryRect = new Rect(gapRect.x + gapRect.width + controller.MinimumEntryRect.Value.width + 5f, rect.y, distributedWidth, Text.LineHeight);
 
             Text.Font = cache;
 
             if (SliderSettings.IsAlwaysOn)
             {
-                rect = new Rect(__state.MinimumEntryRect.Value.x + __state.MinimumEntryRect.Value.width + 5f, rect.y, usedWidth - 10f, rect.height);
+                rect = new Rect(controller.MinimumEntryRect.Value.x + controller.MinimumEntryRect.Value.width + 5f, rect.y, usedWidth - 10f, rect.height);
             }
         }
 
-        private static void Postfix(Rect rect, ref IntRange range, int min, int max, [NotNull] ref NumberEntryController __state)
+        private static void Postfix(Rect rect, ref IntRange range, int min, int max)
         {
+            NumberEntryController controller = SliderController.ControllerForPosition(rect);
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
-            __state.BeginHeuristics(rect);
+            controller.BeginHeuristics(rect);
 
-            bool active = __state.IsCurrentlyActive();
+            bool active = controller.IsCurrentlyActive();
 
             if (active)
             {
-                __state.BeginLogging();
-                __state.Draw(ref range.min, ref range.max);
+                controller.BeginLogging();
+                controller.Draw(ref range.min, ref range.max);
             }
 
-            __state.EndHeuristics();
+            controller.EndHeuristics();
 
             if (!active)
             {
-                __state.EndLogging();
+                controller.EndLogging();
             }
 
             range.min = Mathf.Clamp(range.min, min, range.max);
