@@ -64,7 +64,7 @@ namespace SirRandoo.BetterSliders
                 {
                     continue;
                 }
-                
+
                 if (c.MinimumEntryRect.HasValue && c.MinimumEntryRect.Value.Overlaps(region))
                 {
                     return c;

@@ -38,7 +38,9 @@ namespace SirRandoo.BetterSliders.Helpers
         /// </summary>
         /// <param name="region">The region to shift</param>
         /// <param name="direction">The direction to shift the region to</param>
-        /// <param name="padding">The amount of padding to add to the shifted region</param>
+        /// <param name="padding">
+        ///     The amount of padding to add to the shifted region
+        /// </param>
         /// <returns>The shifted region</returns>
         public static Rect Shift(this Rect region, Direction8Way direction, float padding = 5f)
         {
@@ -67,16 +69,18 @@ namespace SirRandoo.BetterSliders.Helpers
         }
 
         /// <summary>
-        ///     Determines whether or not a given region is visible in a scroll view.
+        ///     Determines whether or not a given region is visible in a scroll
+        ///     view.
         /// </summary>
         /// <param name="region">The region in question</param>
         /// <param name="scrollRect">The visible region of the scroll view</param>
         /// <param name="scrollPos">The current scroll position of the scroll bar</param>
         /// <returns>Whether or not the region is visible</returns>
         /// <remarks>
-        ///     The "visible" region, as mentioned in <see cref="scrollRect"/>'s documentation,
-        ///     refers to a <see cref="Rect"/> that defines the area on screen where content
-        ///     would be visible in a scroll view. This is typically the first parameter of
+        ///     The "visible" region, as mentioned in <see cref="scrollRect"/>'s
+        ///     documentation, refers to a <see cref="Rect"/> that defines the
+        ///     area on screen where content would be visible in a scroll view.
+        ///     This is typically the first parameter of
         ///     <see cref=" GUI.BeginScrollView(Rect, Vector2, Rect)"/>.
         /// </remarks>
         public static bool IsVisible(this Rect region, Rect scrollRect, Vector2 scrollPos) => (region.y >= scrollPos.y || region.y + region.height - 1f >= scrollPos.y)
@@ -86,8 +90,14 @@ namespace SirRandoo.BetterSliders.Helpers
         ///     Splits a <see cref="Rect"/> in two.
         /// </summary>
         /// <param name="region">The rect to split</param>
-        /// <param name="percent">A percent indicating how big the left side of the split should be relative to the region's width</param>
-        /// <returns>A tuple containing the left and right sides of the current line rect</returns>
+        /// <param name="percent">
+        ///     A percent indicating how big the left side of
+        ///     the split should be relative to the region's width
+        /// </param>
+        /// <returns>
+        ///     A tuple containing the left and right sides of the current
+        ///     line rect
+        /// </returns>
         [NotNull]
         public static Tuple<Rect, Rect> Split(this Rect region, float percent = 0.8f)
         {
@@ -100,8 +110,14 @@ namespace SirRandoo.BetterSliders.Helpers
         ///     Splits a <see cref="Rect"/> in two.
         /// </summary>
         /// <param name="listing">The <see cref="Listing"/> object to use</param>
-        /// <param name="percent">A percent indicating how big the left side of the split should be relative to the region's width</param>
-        /// <returns>A tuple containing the left and right sides of the current line rect</returns>
+        /// <param name="percent">
+        ///     A percent indicating how big the left side of
+        ///     the split should be relative to the region's width
+        /// </param>
+        /// <returns>
+        ///     A tuple containing the left and right sides of the current
+        ///     line rect
+        /// </returns>
         [NotNull]
         public static Tuple<Rect, Rect> Split([NotNull] this Listing listing, float percent = 0.8f) => listing.GetRect(Text.LineHeight).Split(percent);
 
@@ -112,8 +128,12 @@ namespace SirRandoo.BetterSliders.Helpers
         /// <param name="y">The Y position of the region</param>
         /// <param name="width">The width of the region</param>
         /// <param name="height">The height of the region</param>
-        /// <param name="percent">A percent indicating how big the left side of the split should be relative to the region's width</param>
+        /// <param name="percent">
+        ///     A percent indicating how big the left side of
+        ///     the split should be relative to the region's width
+        /// </param>
         /// <returns></returns>
+        [NotNull]
         public static Tuple<Rect, Rect> Split(float x, float y, float width, float height, float percent = 0.8f)
         {
             var left = new Rect(x, y, Mathf.FloorToInt(width * percent), height);
@@ -123,7 +143,8 @@ namespace SirRandoo.BetterSliders.Helpers
         }
 
         /// <summary>
-        ///     Trims a <see cref="Rect"/> by the specified amount in the specified direction.
+        ///     Trims a <see cref="Rect"/> by the specified amount in the
+        ///     specified direction.
         /// </summary>
         /// <param name="region">The region to trim</param>
         /// <param name="direction">The direction to trim</param>

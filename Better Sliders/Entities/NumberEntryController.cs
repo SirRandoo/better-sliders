@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using JetBrains.Annotations;
 using SirRandoo.BetterSliders.Helpers;
 using UnityEngine;
 using Verse;
@@ -33,6 +33,7 @@ namespace SirRandoo.BetterSliders.Entities
     internal sealed class NumberEntryController
     {
         private bool _isEffectivelyDisabled;
+        private StringBuilder _logBuilder;
         private float _maximum;
         private string _maximumBuffer;
         private bool _maximumBufferValid;
@@ -46,7 +47,6 @@ namespace SirRandoo.BetterSliders.Entities
         private Rect? _minimumEntryRect;
         private float _minimumInteractionTick;
         private Color? _previousColor;
-        private StringBuilder _logBuilder;
         private bool MinimumInteractedRecently => Mathf.Abs(Time.unscaledTime - _minimumInteractionTick) <= 1f;
         private bool MaximumInteractedRecently => Mathf.Abs(Time.unscaledTime - _maximumInteractionTick) <= 1f;
 
@@ -215,6 +215,7 @@ namespace SirRandoo.BetterSliders.Entities
             if (region.Contains(Event.current.mousePosition))
             {
                 _logBuilder?.Append("    - Mouse isn't over slider position\n");
+
                 return;
             }
 
@@ -300,6 +301,7 @@ namespace SirRandoo.BetterSliders.Entities
             if (SliderSettings.DisplayStyleRaw == nameof(SliderSettings.Style.AlwaysOn))
             {
                 _logBuilder?.Append("    - Display mode is 'always on'; ignoring interaction\n");
+
                 return;
             }
 
@@ -323,17 +325,20 @@ namespace SirRandoo.BetterSliders.Entities
                 case EventType.Used:
                 case EventType.MouseDown:
                 case EventType.KeyDown:
-                    return region.Contains(Event.current.mousePosition);;
+                    return region.Contains(Event.current.mousePosition);
+                    ;
                 default:
                     return false;
             }
         }
 
+        [Conditional("DEBUG")]
         internal void BeginLogging()
         {
             _logBuilder = new StringBuilder();
         }
 
+        [Conditional("DEBUG")]
         internal void EndLogging()
         {
             if (_logBuilder == null)

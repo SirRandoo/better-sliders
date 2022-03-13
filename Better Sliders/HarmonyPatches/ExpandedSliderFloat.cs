@@ -23,11 +23,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Text;
 using HarmonyLib;
 using JetBrains.Annotations;
 using SirRandoo.BetterSliders.Entities;
-using Unity.Collections;
 using UnityEngine;
 using Verse;
 

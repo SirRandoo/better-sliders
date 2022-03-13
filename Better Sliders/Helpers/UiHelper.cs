@@ -39,9 +39,15 @@ namespace SirRandoo.BetterSliders.Helpers
         ///     Draws a stateful number field.
         /// </summary>
         /// <param name="region">The region to draw the number field in</param>
-        /// <param name="buffer">A <see cref="string"/> that houses the user's raw input</param>
-        /// <param name="value">The numerical value of the user's input if it's valid</param>
-        /// <param name="bufferValid">Whether or not the <see cref="buffer"/> is a valid number</param>
+        /// <param name="buffer">
+        ///     A <see cref="string"/> that houses the user's raw input
+        /// </param>
+        /// <param name="value">
+        ///     The numerical value of the user's input if it's valid
+        /// </param>
+        /// <param name="bufferValid">
+        ///     Whether or not the <see cref="buffer"/> is a valid number
+        /// </param>
         /// <param name="minimum">The minimum number <see cref="value"/> can be</param>
         /// <param name="maximum">The maximum value <see cref="value"/> can be</param>
         public static void NumberField(Rect region, ref string buffer, ref int value, ref bool bufferValid, int minimum = 0, int maximum = int.MaxValue)
@@ -70,9 +76,15 @@ namespace SirRandoo.BetterSliders.Helpers
         ///     Draws a stateful number field.
         /// </summary>
         /// <param name="region">The region to draw the number field in</param>
-        /// <param name="buffer">A <see cref="string"/> that houses the user's raw input</param>
-        /// <param name="value">The numerical value of the user's input if it's valid</param>
-        /// <param name="bufferValid">Whether or not the <see cref="buffer"/> is a valid number</param>
+        /// <param name="buffer">
+        ///     A <see cref="string"/> that houses the user's raw input
+        /// </param>
+        /// <param name="value">
+        ///     The numerical value of the user's input if it's valid
+        /// </param>
+        /// <param name="bufferValid">
+        ///     Whether or not the <see cref="buffer"/> is a valid number
+        /// </param>
         /// <param name="minimum">The minimum number <see cref="value"/> can be</param>
         /// <param name="maximum">The maximum value <see cref="value"/> can be</param>
         public static bool NumberField(Rect region, ref string buffer, ref float value, ref bool bufferValid, float minimum = 0f, float maximum = float.MaxValue)
@@ -242,7 +254,9 @@ namespace SirRandoo.BetterSliders.Helpers
         /// </summary>
         /// <param name="listing">The <see cref="Listing"/> object use for layout</param>
         /// <param name="name">The name of the group header</param>
-        /// <param name="gapPrefix">Whether or not to prepend a gap before the group header</param>
+        /// <param name="gapPrefix">
+        ///     Whether or not to prepend a gap before the group header
+        /// </param>
         public static void GroupHeader([NotNull] this Listing listing, string name, bool gapPrefix = true)
         {
             if (gapPrefix)

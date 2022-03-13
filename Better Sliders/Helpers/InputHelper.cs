@@ -29,10 +29,14 @@ namespace SirRandoo.BetterSliders.Helpers
     public static class InputHelper
     {
         /// <summary>
-        ///     Checks if any passed keys have been pressed, or currently being held down.
+        ///     Checks if any passed keys have been pressed, or currently being
+        ///     held down.
         /// </summary>
         /// <param name="codes">The <see cref="KeyCode"/>s to check</param>
-        /// <returns>Whether or not any of the provided <see cref="KeyCode"/>s were pressed or held down</returns>
+        /// <returns>
+        ///     Whether or not any of the provided <see cref="KeyCode"/>s
+        ///     were pressed or held down
+        /// </returns>
         public static bool AnyKeyDown([NotNull] params KeyCode[] codes)
         {
             for (var i = 0; i < codes.Length; i++)
@@ -47,12 +51,13 @@ namespace SirRandoo.BetterSliders.Helpers
         }
 
         /// <summary>
-        ///     Checks if any passed mouse buttons has been pressed, or currently being held down.
+        ///     Checks if any passed mouse buttons has been pressed, or currently
+        ///     being held down.
         /// </summary>
         /// <param name="codes">The <see cref="MouseButtonCode"/>s to check</param>
         /// <returns>
-        ///     Whether or not any of the provided <see cref="MouseButtonCode"/>s were pressed, or are currently being held
-        ///     down
+        ///     Whether or not any of the provided <see cref="MouseButtonCode"/>s
+        ///     were pressed, or are currently being held down
         /// </returns>
         public static bool AnyMouseButtonDown([NotNull] params MouseButtonCode[] codes)
         {
@@ -68,17 +73,23 @@ namespace SirRandoo.BetterSliders.Helpers
         }
 
         /// <summary>
-        ///     Checks whether or not the user left clicked in the region specified.
+        ///     Checks whether or not the user left clicked in the region
+        ///     specified.
         /// </summary>
         /// <param name="region">The region to check</param>
-        /// <returns>Whether or not the user left clicked in the region specified.</returns>
+        /// <returns>
+        ///     Whether or not the user left clicked in the region specified.
+        /// </returns>
         public static bool LeftClicked(this Rect region) => MouseButtonClicked(region, MouseButtonCode.Left);
 
         /// <summary>
-        ///     Checks whether or not the user right clicked in the region specified.
+        ///     Checks whether or not the user right clicked in the region
+        ///     specified.
         /// </summary>
         /// <param name="region">The region to check</param>
-        /// <returns>Whether or not the user right clicked in the region specified.</returns>
+        /// <returns>
+        ///     Whether or not the user right clicked in the region specified.
+        /// </returns>
         public static bool RightClicked(this Rect region) => MouseButtonClicked(region, MouseButtonCode.Right);
 
         /// <summary>
