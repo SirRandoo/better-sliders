@@ -127,7 +127,7 @@ namespace SirRandoo.BetterSliders.Entities
 
             DrawMinimumEntry(ref value);
         }
-        private void DrawMinimumEntry(ref float value)
+        private void DrawMinimumEntry(ref float value, bool doFocus = true)
         {
             if (MinimumEntryRect.HasValue)
             {
@@ -142,7 +142,11 @@ namespace SirRandoo.BetterSliders.Entities
                     _minimumInteractionTick = Time.unscaledTime;
                 }
 
-                TryFocusControl(_minimumEntryName);
+                if (doFocus)
+                {
+                    TryFocusControl(_minimumEntryName);
+                }
+
                 TryProcessInteraction();
             }
 
@@ -161,11 +165,20 @@ namespace SirRandoo.BetterSliders.Entities
         public void Draw(ref float minimum, ref float maximum)
         {
             _logBuilder?.Append("  - Attempting to draw min/max number fields\n");
-            DrawMinimumEntry(ref minimum);
-            DrawMaximumEntry(ref maximum);
+            DrawMinimumEntry(ref minimum, false);
+            DrawMaximumEntry(ref maximum, false);
+
+            TryFocusRelevantField();
+        }
+        private void TryFocusRelevantField()
+        {
+            float minDistance = GenUI.DistFromRect(MinimumEntryRect!.Value, Event.current.mousePosition);
+            float maxDistance = GenUI.DistFromRect(MaximumEntryRect!.Value, Event.current.mousePosition);
+
+            TryFocusControl(maxDistance > minDistance ? _minimumEntryName : _maximumEntryName);
         }
 
-        private void DrawMaximumEntry(ref float maximum)
+        private void DrawMaximumEntry(ref float maximum, bool doFocus = true)
         {
             if (MaximumEntryRect.HasValue)
             {
@@ -179,7 +192,11 @@ namespace SirRandoo.BetterSliders.Entities
                     _maximumInteractionTick = Time.unscaledTime;
                 }
 
-                TryFocusControl(_maximumEntryName);
+                if (doFocus)
+                {
+                    TryFocusControl(_maximumEntryName);
+                }
+
                 TryProcessInteraction();
             }
 
@@ -201,11 +218,13 @@ namespace SirRandoo.BetterSliders.Entities
             float minProxy = minimum;
             float maxProxy = maximum;
 
-            DrawMinimumEntry(ref minProxy);
+            DrawMinimumEntry(ref minProxy, false);
             minimum = (int)minProxy;
 
-            DrawMaximumEntry(ref maxProxy);
+            DrawMaximumEntry(ref maxProxy, false);
             maximum = (int)maxProxy;
+
+            TryFocusRelevantField();
         }
 
         public void BeginHysteresis(Rect region)
@@ -243,6 +262,7 @@ namespace SirRandoo.BetterSliders.Entities
                 );
 
                 _isEffectivelyDisabled = false;
+                Depth = GUI.depth;
             }
             else if (distance <= SliderSettings.HysteresisBeginDistance)
             {
@@ -250,12 +270,14 @@ namespace SirRandoo.BetterSliders.Entities
                 Color color = _previousColor ?? Color.white;
                 GUI.color = new Color(color.r, color.g, color.b, 1f);
                 _isEffectivelyDisabled = false;
+                Depth = GUI.depth;
             }
 
             if (SliderSettings.IsAlwaysOn)
             {
                 _logBuilder?.Append("    - Mode is 'always on'; ensuring number fields aren't transparent\n");
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1f);
+                Depth = GUI.depth;
             }
         }
 
