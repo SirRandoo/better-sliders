@@ -214,7 +214,7 @@ namespace SirRandoo.BetterSliders.Entities
 
             if (region.Contains(Event.current.mousePosition))
             {
-                _logBuilder?.Append("    - Mouse isn't over slider position\n");
+                _logBuilder?.Append("    - Mouse is over slider position\n");
 
                 return;
             }
@@ -326,7 +326,6 @@ namespace SirRandoo.BetterSliders.Entities
                 case EventType.MouseDown:
                 case EventType.KeyDown:
                     return region.Contains(Event.current.mousePosition);
-                    ;
                 default:
                     return false;
             }
