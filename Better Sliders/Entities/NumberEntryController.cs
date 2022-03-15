@@ -142,7 +142,7 @@ namespace SirRandoo.BetterSliders.Entities
                     _minimumInteractionTick = Time.unscaledTime;
                 }
 
-                if (doFocus)
+                if (doFocus && ShouldReceiveFocus(_minimumEntryRect!.Value))
                 {
                     TryFocusControl(_minimumEntryName);
                 }
@@ -172,10 +172,14 @@ namespace SirRandoo.BetterSliders.Entities
         }
         private void TryFocusRelevantField()
         {
-            float minDistance = GenUI.DistFromRect(MinimumEntryRect!.Value, Event.current.mousePosition);
-            float maxDistance = GenUI.DistFromRect(MaximumEntryRect!.Value, Event.current.mousePosition);
-
-            TryFocusControl(maxDistance > minDistance ? _minimumEntryName : _maximumEntryName);
+            if (ShouldReceiveFocus(MinimumEntryRect!.Value))
+            {
+                TryFocusControl(_minimumEntryName);
+            }
+            else if (ShouldReceiveFocus(MaximumEntryRect!.Value))
+            {
+                TryFocusControl(_maximumEntryName);
+            }
         }
 
         private void DrawMaximumEntry(ref float maximum, bool doFocus = true)
@@ -305,6 +309,11 @@ namespace SirRandoo.BetterSliders.Entities
             {
                 GUIUtility.keyboardControl = 0;
             }
+        }
+
+        private static bool ShouldReceiveFocus(Rect region)
+        {
+            return region.Contains(Event.current.mousePosition);
         }
 
         private void TryFocusControl(string name)
