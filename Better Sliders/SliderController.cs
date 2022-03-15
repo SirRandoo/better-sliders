@@ -76,7 +76,10 @@ namespace SirRandoo.BetterSliders
                 }
             }
 
-            controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
+            controller = new NumberEntryController
+            {
+                Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId, Depth = GUI.depth
+            };
             controllers.Add(controller);
 
             return controller;

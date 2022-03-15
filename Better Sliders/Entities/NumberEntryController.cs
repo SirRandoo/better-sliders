@@ -69,6 +69,7 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
+        public int Depth { get; set; }
         public int GroupId { get; set; }
 
         public System.WeakReference<Window> Parent { get; set; }
@@ -286,7 +287,7 @@ namespace SirRandoo.BetterSliders.Entities
 
         private void TryFocusControl(string name)
         {
-            if (GUI.GetNameOfFocusedControl() == name || !this.IsControllerClosest())
+            if (GUI.GetNameOfFocusedControl() == name || !this.IsControllerClosest() || Depth != GUI.depth)
             {
                 return;
             }
