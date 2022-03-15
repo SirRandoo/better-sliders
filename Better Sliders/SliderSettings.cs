@@ -36,12 +36,12 @@ namespace SirRandoo.BetterSliders
         public static string DisplayStyleRaw = Style.Hover.ToString();
 
         public static List<FloatMenuOption> StyleOptions;
-        public static float HeuristicsBeginDistance = 35f;
-        public static float HeuristicsEndDistance = 110f;
+        public static float HysteresisBeginDistance = 35f;
+        public static float HysteresisEndDistance = 110f;
 
-        private static bool _isDrawingBeginHeuristics;
-        private static bool _isDrawingEndHeuristics;
-        private static bool _isViewingHeuristics;
+        private static bool _isDrawingBeginHysteresis;
+        private static bool _isDrawingEndHysteresis;
+        private static bool _isViewingHysteresis;
 
         public static bool IsAlwaysOn => DisplayStyleRaw == nameof(Style.AlwaysOn);
 
@@ -60,68 +60,68 @@ namespace SirRandoo.BetterSliders
                 Find.WindowStack.Add(new FloatMenu(StyleOptions));
             }
 
-            (Rect heuristicsViewLabel, Rect heuristicsViewField) = listing.Split();
-            UiHelper.Label(heuristicsViewLabel, "BetterSliders.HeuristicsView.Label".TranslateSimple());
+            (Rect hysteresisViewLabel, Rect hysteresisViewField) = listing.Split();
+            UiHelper.Label(hysteresisViewLabel, "BetterSliders.HysteresisView.Label".TranslateSimple());
 
-            if (_isViewingHeuristics)
+            if (_isViewingHysteresis)
             {
-                PreviewHeuristicsFade(heuristicsViewField);
+                PreviewHysteresisFade(hysteresisViewField);
             }
 
             if (Widgets.ButtonText(
-                heuristicsViewField,
-                _isViewingHeuristics ? "BetterSliders.Heuristics.Hide".TranslateSimple() : "BetterSliders.Heuristics.View".TranslateSimple()
+                hysteresisViewField,
+                _isViewingHysteresis ? "BetterSliders.Hysteresis.Hide".TranslateSimple() : "BetterSliders.Hysteresis.View".TranslateSimple()
             ))
             {
-                _isViewingHeuristics = !_isViewingHeuristics;
+                _isViewingHysteresis = !_isViewingHysteresis;
             }
 
             GUI.color = Color.white;
 
-            (Rect heuristicsBeginLabel, Rect heuristicsBeginField) = listing.Split();
-            UiHelper.Label(heuristicsBeginLabel, "BetterSliders.HeuristicsBegin.Label".TranslateSimple());
+            (Rect hysteresisBeginLabel, Rect hysteresisBeginField) = listing.Split();
+            UiHelper.Label(hysteresisBeginLabel, "BetterSliders.HysteresisBegin.Label".TranslateSimple());
 
-            if (Widgets.ButtonText(heuristicsBeginField, "BetterSliders.Heuristics.Calculate".TranslateSimple()))
+            if (Widgets.ButtonText(hysteresisBeginField, "BetterSliders.Hysteresis.Calculate".TranslateSimple()))
             {
-                _isDrawingBeginHeuristics = true;
+                _isDrawingBeginHysteresis = true;
             }
 
-            (Rect heuristicsEndLabel, Rect heuristicsEndField) = listing.Split();
-            UiHelper.Label(heuristicsEndLabel, "BetterSliders.HeuristicsEnd.Label".TranslateSimple());
+            (Rect hysteresisEndLabel, Rect hysteresisEndField) = listing.Split();
+            UiHelper.Label(hysteresisEndLabel, "BetterSliders.HysteresisEnd.Label".TranslateSimple());
 
-            if (Widgets.ButtonText(heuristicsEndField, "BetterSliders.Heuristics.Calculate".TranslateSimple()))
+            if (Widgets.ButtonText(hysteresisEndField, "BetterSliders.Hysteresis.Calculate".TranslateSimple()))
             {
-                _isDrawingEndHeuristics = true;
+                _isDrawingEndHysteresis = true;
             }
 
-            if (_isViewingHeuristics)
+            if (_isViewingHysteresis)
             {
-                DrawHeuristicsInterface(heuristicsViewField.center);
+                DrawHysteresisInterface(hysteresisViewField.center);
             }
 
-            if (_isDrawingBeginHeuristics)
+            if (_isDrawingBeginHysteresis)
             {
-                DrawHeuristicsInterface(heuristicsBeginField.center);
+                DrawHysteresisInterface(hysteresisBeginField.center);
             }
 
-            if (_isDrawingEndHeuristics)
+            if (_isDrawingEndHysteresis)
             {
-                DrawHeuristicsInterface(heuristicsEndField.center);
+                DrawHysteresisInterface(hysteresisEndField.center);
             }
 
-            if (_isDrawingBeginHeuristics || _isDrawingEndHeuristics || _isViewingHeuristics)
+            if (_isDrawingBeginHysteresis || _isDrawingEndHysteresis || _isViewingHysteresis)
             {
                 listing.Gap(6f);
                 Text.Font = GameFont.Tiny;
 
-                (Rect _, Rect heuristicsLegendField) = listing.Split();
-                UiHelper.Label(heuristicsLegendField, "BetterSliders.HeuristicsLegend.Label".TranslateSimple(), TextAnchor.MiddleCenter);
+                (Rect _, Rect hysteresisLegendField) = listing.Split();
+                UiHelper.Label(hysteresisLegendField, "BetterSliders.HysteresisLegend.Label".TranslateSimple(), TextAnchor.MiddleCenter);
 
-                (Rect _, Rect heuristicsLegendBeginField) = listing.Split();
-                UiHelper.Label(heuristicsLegendBeginField, "BetterSliders.HeuristicsLegend.Begin".TranslateSimple(), Color.yellow);
+                (Rect _, Rect hysteresisLegendBeginField) = listing.Split();
+                UiHelper.Label(hysteresisLegendBeginField, "BetterSliders.HysteresisLegend.Begin".TranslateSimple(), Color.yellow);
 
-                (Rect _, Rect heuristicsLegendEndField) = listing.Split();
-                UiHelper.Label(heuristicsLegendEndField, "BetterSliders.HeuristicsLegend.End".TranslateSimple(), Color.red);
+                (Rect _, Rect hysteresisLegendEndField) = listing.Split();
+                UiHelper.Label(hysteresisLegendEndField, "BetterSliders.HysteresisLegend.End".TranslateSimple(), Color.red);
 
                 Text.Font = GameFont.Small;
             }
@@ -129,73 +129,73 @@ namespace SirRandoo.BetterSliders
             listing.End();
             GUI.EndGroup();
         }
-        private static void PreviewHeuristicsFade(Rect region)
+        private static void PreviewHysteresisFade(Rect region)
         {
             float distance = GenUI.DistFromRect(region, Event.current.mousePosition);
 
-            if (distance >= HeuristicsEndDistance)
+            if (distance >= HysteresisEndDistance)
             {
                 GUI.color = new Color(1f, 1f, 1f, 0f);
 
                 return;
             }
 
-            if (distance >= HeuristicsBeginDistance)
+            if (distance >= HysteresisBeginDistance)
             {
-                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, Mathf.Clamp(1f - 1f * (distance / HeuristicsEndDistance), 0f, 1f));
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, Mathf.Clamp(1f - 1f * (distance / HysteresisEndDistance), 0f, 1f));
 
                 return;
             }
 
-            if (distance <= HeuristicsBeginDistance)
+            if (distance <= HysteresisBeginDistance)
             {
                 GUI.color = Color.white;
             }
         }
-        private static void DrawHeuristicsInterface(Vector2 position)
+        private static void DrawHysteresisInterface(Vector2 position)
         {
             var beginningRect = new Rect(
-                position.x - HeuristicsBeginDistance,
-                position.y - HeuristicsBeginDistance,
-                HeuristicsBeginDistance * 2f,
-                HeuristicsBeginDistance * 2f
+                position.x - HysteresisBeginDistance,
+                position.y - HysteresisBeginDistance,
+                HysteresisBeginDistance * 2f,
+                HysteresisBeginDistance * 2f
             );
 
-            var endingRect = new Rect(position.x - HeuristicsEndDistance, position.y - HeuristicsEndDistance, HeuristicsEndDistance * 2f, HeuristicsEndDistance * 2f);
+            var endingRect = new Rect(position.x - HysteresisEndDistance, position.y - HysteresisEndDistance, HysteresisEndDistance * 2f, HysteresisEndDistance * 2f);
 
             GUI.color = Color.blue;
             Widgets.DrawBox(beginningRect);
 
             GUI.color = Color.yellow;
-            GUI.DrawTexture(beginningRect, Textures.HeuristicsCircle);
+            GUI.DrawTexture(beginningRect, Textures.HysteresisCircle);
 
             GUI.color = Color.red;
-            GUI.DrawTexture(endingRect, Textures.HeuristicsCircle);
+            GUI.DrawTexture(endingRect, Textures.HysteresisCircle);
 
             GUI.color = Color.white;
 
-            if (_isViewingHeuristics)
+            if (_isViewingHysteresis)
             {
                 return;
             }
 
-            if (_isDrawingBeginHeuristics)
+            if (_isDrawingBeginHysteresis)
             {
-                HeuristicsBeginDistance = GenUI.DistFromRect(beginningRect, Event.current.mousePosition);
+                HysteresisBeginDistance = GenUI.DistFromRect(beginningRect, Event.current.mousePosition);
 
                 if (InputHelper.AnyMouseButtonDown(MouseButtonCode.Left))
                 {
-                    _isDrawingBeginHeuristics = false;
+                    _isDrawingBeginHysteresis = false;
                 }
             }
 
-            if (_isDrawingEndHeuristics)
+            if (_isDrawingEndHysteresis)
             {
-                HeuristicsEndDistance = GenUI.DistFromRect(endingRect, Event.current.mousePosition);
+                HysteresisEndDistance = GenUI.DistFromRect(endingRect, Event.current.mousePosition);
 
                 if (InputHelper.AnyMouseButtonDown(MouseButtonCode.Left))
                 {
-                    _isDrawingEndHeuristics = false;
+                    _isDrawingEndHysteresis = false;
                 }
             }
         }
@@ -203,8 +203,8 @@ namespace SirRandoo.BetterSliders
         public override void ExposeData()
         {
             Scribe_Values.Look(ref DisplayStyleRaw, "displayStyle", Style.Hover.ToString());
-            Scribe_Values.Look(ref HeuristicsBeginDistance, "heuristicsBeginDistance", 35f);
-            Scribe_Values.Look(ref HeuristicsEndDistance, "heuristicsEndDistance", 110f);
+            Scribe_Values.Look(ref HysteresisBeginDistance, "hysteresisBeginDistance", 35f);
+            Scribe_Values.Look(ref HysteresisEndDistance, "hysteresisEndDistance", 110f);
         }
         public static void PrepareState()
         {

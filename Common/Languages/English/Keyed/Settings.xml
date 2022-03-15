@@ -6,14 +6,14 @@
     <BetterSliders.DisplayStyles.Hover>Hover</BetterSliders.DisplayStyles.Hover>
     <BetterSliders.DisplayStyles.AlwaysOn>Always on</BetterSliders.DisplayStyles.AlwaysOn>
 
-    <BetterSliders.HeuristicsBegin.Label>Click to adjust the start threshold for the heuristics system</BetterSliders.HeuristicsBegin.Label>
-    <BetterSliders.HeuristicsEnd.Label>Click to adjust the end threshold for the heuristics system</BetterSliders.HeuristicsEnd.Label>
-    <BetterSliders.HeuristicsView.Label>Click to view the thresholds for the heuristic system</BetterSliders.HeuristicsView.Label>
-    <BetterSliders.Heuristics.Calculate>Calculate</BetterSliders.Heuristics.Calculate>
-    <BetterSliders.Heuristics.View>View</BetterSliders.Heuristics.View>
-    <BetterSliders.Heuristics.Hide>Hide</BetterSliders.Heuristics.Hide>
+    <BetterSliders.HysteresisBegin.Label>Click to adjust the start threshold for the hysteresis system</BetterSliders.HysteresisBegin.Label>
+    <BetterSliders.HysteresisEnd.Label>Click to adjust the end threshold for the hysteresis system</BetterSliders.HysteresisEnd.Label>
+    <BetterSliders.HysteresisView.Label>Click to view the thresholds for the hysteresis system</BetterSliders.HysteresisView.Label>
+    <BetterSliders.Hysteresis.Calculate>Calculate</BetterSliders.Hysteresis.Calculate>
+    <BetterSliders.Hysteresis.View>View</BetterSliders.Hysteresis.View>
+    <BetterSliders.Hysteresis.Hide>Hide</BetterSliders.Hysteresis.Hide>
 
-    <BetterSliders.HeuristicsLegend.Label>Legend</BetterSliders.HeuristicsLegend.Label>
-    <BetterSliders.HeuristicsLegend.Begin>Begin Threshold</BetterSliders.HeuristicsLegend.Begin>
-    <BetterSliders.HeuristicsLegend.End>End Threshold</BetterSliders.HeuristicsLegend.End>
+    <BetterSliders.HysteresisLegend.Label>Legend</BetterSliders.HysteresisLegend.Label>
+    <BetterSliders.HysteresisLegend.Begin>Begin Threshold</BetterSliders.HysteresisLegend.Begin>
+    <BetterSliders.HysteresisLegend.End>End Threshold</BetterSliders.HysteresisLegend.End>
 </LanguageData>

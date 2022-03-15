@@ -207,7 +207,7 @@ namespace SirRandoo.BetterSliders.Entities
             maximum = (int)maxProxy;
         }
 
-        public void BeginHeuristics(Rect region)
+        public void BeginHysteresis(Rect region)
         {
             _logBuilder?.Append($"  - Beginning heuristics at [x: {region.x:N}, y: {region.y:N}, group: {GroupId:N}]");
             _logBuilder?.Append($" with a size of [width: {region.width:N}, height: {region.height:N}]\n");
@@ -222,14 +222,14 @@ namespace SirRandoo.BetterSliders.Entities
             float distance = GenUI.DistFromRect(region, Event.current.mousePosition);
             _logBuilder?.Append($"    - Mouse distance from slider: {distance:N}");
 
-            if (distance >= SliderSettings.HeuristicsEndDistance)
+            if (distance >= SliderSettings.HysteresisEndDistance)
             {
                 _logBuilder?.Append("      - Mouse is too far from slider; hiding number field\n");
                 Color color = _previousColor ?? Color.white;
                 GUI.color = new Color(color.r, color.g, color.b, 0f);
                 _isEffectivelyDisabled = true;
             }
-            else if (distance >= SliderSettings.HeuristicsBeginDistance)
+            else if (distance >= SliderSettings.HysteresisBeginDistance)
             {
                 _logBuilder?.Append("      - Mouse is within the fade out distance; adjusting number field's visibility to match\n");
                 _previousColor ??= GUI.color;
@@ -238,12 +238,12 @@ namespace SirRandoo.BetterSliders.Entities
                     _previousColor.Value.r,
                     _previousColor.Value.g,
                     _previousColor.Value.b,
-                    Mathf.Clamp(1f - _previousColor.Value.a * (distance / SliderSettings.HeuristicsEndDistance), 0f, 1f)
+                    Mathf.Clamp(1f - _previousColor.Value.a * (distance / SliderSettings.HysteresisEndDistance), 0f, 1f)
                 );
 
                 _isEffectivelyDisabled = false;
             }
-            else if (distance <= SliderSettings.HeuristicsBeginDistance)
+            else if (distance <= SliderSettings.HysteresisBeginDistance)
             {
                 _logBuilder?.Append("      - Mouse isn't within fade out distance; ensuring number field isn't transparent\n");
                 Color color = _previousColor ?? Color.white;
@@ -258,7 +258,7 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
-        public void EndHeuristics()
+        public void EndHysteresis()
         {
             _logBuilder?.Append("  - Ending mouse heuristics\n");
             GUI.color = _previousColor ?? Color.white;

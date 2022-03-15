@@ -70,7 +70,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
 
-            __state.BeginHeuristics(rect);
+            __state.BeginHysteresis(rect);
 
             bool active = __state.IsCurrentlyActive();
 
@@ -80,7 +80,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
                 __state.Draw(ref range.min, ref range.max);
             }
 
-            __state.EndHeuristics();
+            __state.EndHysteresis();
 
             if (!active)
             {

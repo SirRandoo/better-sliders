@@ -28,6 +28,6 @@ namespace SirRandoo.BetterSliders
     [StaticConstructorOnStartup]
     public static class Textures
     {
-        public static readonly Texture2D HeuristicsCircle = ContentFinder<Texture2D>.Get("UI/HeuristicsCircle");
+        public static readonly Texture2D HysteresisCircle = ContentFinder<Texture2D>.Get("UI/HysteresisCircle");
     }
 }
