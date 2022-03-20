@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<LanguageData>
+  <BetterSliders.DisplayStyle.Label>入力フィールドの表示の仕方</BetterSliders.DisplayStyle.Label>
+
+  <BetterSliders.DisplayStyles.Hover>ホバー</BetterSliders.DisplayStyles.Hover>
+  <BetterSliders.DisplayStyles.AlwaysOn>常にオン</BetterSliders.DisplayStyles.AlwaysOn>
+
+  <BetterSliders.HysteresisBegin.Label>クリックするとぼやけ機能の開始位置を調整できます</BetterSliders.HysteresisBegin.Label>
+  <BetterSliders.HysteresisEnd.Label>クリックするとぼやけ機能の終了位置を調整できます</BetterSliders.HysteresisEnd.Label>
+  <BetterSliders.HysteresisView.Label>クリックするとぼやけ機能の境界を表示します</BetterSliders.HysteresisView.Label>
+  <BetterSliders.Hysteresis.Calculate>設定する</BetterSliders.Hysteresis.Calculate>
+  <BetterSliders.Hysteresis.View>表示する</BetterSliders.Hysteresis.View>
+  <BetterSliders.Hysteresis.Hide>消す</BetterSliders.Hysteresis.Hide>
+
+  <BetterSliders.HysteresisLegend.Label>凡例</BetterSliders.HysteresisLegend.Label>
+  <BetterSliders.HysteresisLegend.Begin>ぼやける境目 (内側)</BetterSliders.HysteresisLegend.Begin>
+  <BetterSliders.HysteresisLegend.End>ぼやける境目 (外側)</BetterSliders.HysteresisLegend.End>
+
+</LanguageData>
