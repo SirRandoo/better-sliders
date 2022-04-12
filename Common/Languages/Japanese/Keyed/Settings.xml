@@ -3,18 +3,18 @@
 <LanguageData>
   <BetterSliders.DisplayStyle.Label>入力フィールドの表示の仕方</BetterSliders.DisplayStyle.Label>
 
-  <BetterSliders.DisplayStyles.Hover>ホバー</BetterSliders.DisplayStyles.Hover>
+  <BetterSliders.DisplayStyles.Hover>ホバー時</BetterSliders.DisplayStyles.Hover>
   <BetterSliders.DisplayStyles.AlwaysOn>常にオン</BetterSliders.DisplayStyles.AlwaysOn>
 
-  <BetterSliders.HysteresisBegin.Label>クリックするとヒステリシスシステムの開始しきい値を調整できます</BetterSliders.HysteresisBegin.Label>
-  <BetterSliders.HysteresisEnd.Label>クリックするとヒステリシスシステムの終了しきい値を調整できます</BetterSliders.HysteresisEnd.Label>
-  <BetterSliders.HysteresisView.Label>クリックするとヒステリシスシステムのしきい値を表示します</BetterSliders.HysteresisView.Label>
-  <BetterSliders.Hysteresis.Calculate>計算</BetterSliders.Hysteresis.Calculate>
+  <BetterSliders.HysteresisBegin.Label>マウスアウト時に生じる遅延効果の開始位置をクリックで調整</BetterSliders.HysteresisBegin.Label>
+  <BetterSliders.HysteresisEnd.Label>マウスアウト時に生じる遅延効果の終了位置をクリックで調整</BetterSliders.HysteresisEnd.Label>
+  <BetterSliders.HysteresisView.Label>マウスアウト時に生じる遅延効果の境界をクリックで表示</BetterSliders.HysteresisView.Label>
+  <BetterSliders.Hysteresis.Calculate>設定する</BetterSliders.Hysteresis.Calculate>
   <BetterSliders.Hysteresis.View>表示</BetterSliders.Hysteresis.View>
   <BetterSliders.Hysteresis.Hide>非表示</BetterSliders.Hysteresis.Hide>
 
   <BetterSliders.HysteresisLegend.Label>凡例</BetterSliders.HysteresisLegend.Label>
-  <BetterSliders.HysteresisLegend.Begin>しきい値 (開始)</BetterSliders.HysteresisLegend.Begin>
-  <BetterSliders.HysteresisLegend.End>しきい値 (終了)</BetterSliders.HysteresisLegend.End>
+  <BetterSliders.HysteresisLegend.Begin>開始位置</BetterSliders.HysteresisLegend.Begin>
+  <BetterSliders.HysteresisLegend.End>終了位置</BetterSliders.HysteresisLegend.End>
 
 </LanguageData>
