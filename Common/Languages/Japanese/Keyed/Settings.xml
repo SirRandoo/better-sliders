@@ -6,14 +6,14 @@
   <BetterSliders.DisplayStyles.Hover>ホバー時</BetterSliders.DisplayStyles.Hover>
   <BetterSliders.DisplayStyles.AlwaysOn>常にオン</BetterSliders.DisplayStyles.AlwaysOn>
 
-  <BetterSliders.HysteresisBegin.Label>マウスアウト時に生じる遅延効果の開始位置をクリックで調整</BetterSliders.HysteresisBegin.Label>
-  <BetterSliders.HysteresisEnd.Label>マウスアウト時に生じる遅延効果の終了位置をクリックで調整</BetterSliders.HysteresisEnd.Label>
-  <BetterSliders.HysteresisView.Label>マウスアウト時に生じる遅延効果の境界をクリックで表示</BetterSliders.HysteresisView.Label>
+  <BetterSliders.HysteresisBegin.Label>マウスアウト時にフェードアウトが始まる位置をクリックで調整</BetterSliders.HysteresisBegin.Label>
+  <BetterSliders.HysteresisEnd.Label>マウスアウト時にフェードアウトが終わる位置をクリックで調整</BetterSliders.HysteresisEnd.Label>
+  <BetterSliders.HysteresisView.Label>マウスアウト時にフェードアウトする位置をクリックで表示</BetterSliders.HysteresisView.Label>
   <BetterSliders.Hysteresis.Calculate>設定する</BetterSliders.Hysteresis.Calculate>
-  <BetterSliders.Hysteresis.View>表示</BetterSliders.Hysteresis.View>
-  <BetterSliders.Hysteresis.Hide>非表示</BetterSliders.Hysteresis.Hide>
+  <BetterSliders.Hysteresis.View>表示する</BetterSliders.Hysteresis.View>
+  <BetterSliders.Hysteresis.Hide>非表示にする</BetterSliders.Hysteresis.Hide>
 
-  <BetterSliders.HysteresisLegend.Label>凡例</BetterSliders.HysteresisLegend.Label>
+  <BetterSliders.HysteresisLegend.Label>見本</BetterSliders.HysteresisLegend.Label>
   <BetterSliders.HysteresisLegend.Begin>開始位置</BetterSliders.HysteresisLegend.Begin>
   <BetterSliders.HysteresisLegend.End>終了位置</BetterSliders.HysteresisLegend.End>
 
