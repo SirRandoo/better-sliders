@@ -50,7 +50,7 @@ namespace SirRandoo.BetterSliders.Entities
         private bool MinimumInteractedRecently => Mathf.Abs(Time.unscaledTime - _minimumInteractionTick) <= 1f;
         private bool MaximumInteractedRecently => Mathf.Abs(Time.unscaledTime - _maximumInteractionTick) <= 1f;
 
-        public Rect? MaximumEntryRect
+        internal Rect? MaximumEntryRect
         {
             get => _maximumEntryRect;
             set
@@ -59,7 +59,7 @@ namespace SirRandoo.BetterSliders.Entities
                 _maximumEntryName = $"TextField{MaximumEntryRect!.Value.y:F0}{MaximumEntryRect.Value.x:F0}";
             }
         }
-        public Rect? MinimumEntryRect
+        internal Rect? MinimumEntryRect
         {
             get => _minimumEntryRect;
             set
@@ -69,12 +69,12 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
-        public int Depth { get; set; }
-        public int GroupId { get; set; }
+        internal int Depth { get; set; }
+        internal int GroupId { get; set; }
 
-        public System.WeakReference<Window> Parent { get; set; }
+        internal System.WeakReference<Window> Parent { get; set; }
 
-        public bool IsCurrentlyActive()
+        internal bool IsCurrentlyActive()
         {
             if (!Parent.TryGetTarget(out Window parent) || !Find.WindowStack.GetsInput(parent))
             {
@@ -96,7 +96,7 @@ namespace SirRandoo.BetterSliders.Entities
             return true;
         }
 
-        public void SetMaximumValue(float value)
+        internal void SetMaximumValue(float value)
         {
             _maximumBufferValid = false;
             _maximumBuffer = value.ToString("N");
@@ -104,7 +104,7 @@ namespace SirRandoo.BetterSliders.Entities
             _maximumBufferValid = true;
         }
 
-        public void SetMinimumValue(float value)
+        internal void SetMinimumValue(float value)
         {
             _minimumBufferValid = false;
             _minimumBuffer = value.ToString("N");
@@ -112,7 +112,7 @@ namespace SirRandoo.BetterSliders.Entities
             _minimumBufferValid = true;
         }
 
-        public void SetStateIfNull(float minimum)
+        internal void SetStateIfNull(float minimum)
         {
             if (_minimumBuffer == null)
             {
@@ -120,7 +120,7 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
-        public void SetStateIfNull(float minimum, float maximum)
+        internal void SetStateIfNull(float minimum, float maximum)
         {
             if (_minimumBuffer == null)
             {
@@ -133,13 +133,38 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
-        public void Draw(ref float value)
+        internal void Draw(ref float value)
         {
             _logBuilder?.Append("  - Attempting to draw single number field\n");
 
             DrawMinimumEntry(ref value);
         }
-        private void DrawMinimumEntry(ref float value, bool doFocus = true)
+        
+        internal void Draw(ref float minimum, ref float maximum)
+        {
+            _logBuilder?.Append("  - Attempting to draw min/max number fields\n");
+            DrawMinimumEntry(ref minimum, false);
+            DrawMaximumEntry(ref maximum, false);
+
+            TryFocusRelevantField();
+        }
+
+        internal void Draw(ref int minimum, ref int maximum)
+        {
+            _logBuilder?.Append("  - Attempting to draw min/max integer fields\n");
+            float minProxy = minimum;
+            float maxProxy = maximum;
+
+            DrawMinimumEntry(ref minProxy, false);
+            minimum = (int)minProxy;
+
+            DrawMaximumEntry(ref maxProxy, false);
+            maximum = (int)maxProxy;
+
+            TryFocusRelevantField();
+        }
+
+        internal void DrawMinimumEntry(ref float value, bool doFocus = true)
         {
             if (MinimumEntryRect.HasValue)
             {
@@ -174,15 +199,7 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
-        public void Draw(ref float minimum, ref float maximum)
-        {
-            _logBuilder?.Append("  - Attempting to draw min/max number fields\n");
-            DrawMinimumEntry(ref minimum, false);
-            DrawMaximumEntry(ref maximum, false);
-
-            TryFocusRelevantField();
-        }
-        private void TryFocusRelevantField()
+        internal void TryFocusRelevantField()
         {
             if (ShouldReceiveFocus(MinimumEntryRect!.Value))
             {
@@ -194,7 +211,7 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
-        private void DrawMaximumEntry(ref float maximum, bool doFocus = true)
+        internal void DrawMaximumEntry(ref float maximum, bool doFocus = true)
         {
             if (MaximumEntryRect.HasValue)
             {
@@ -227,23 +244,8 @@ namespace SirRandoo.BetterSliders.Entities
                 maximum = _maximum;
             }
         }
-
-        public void Draw(ref int minimum, ref int maximum)
-        {
-            _logBuilder?.Append("  - Attempting to draw min/max integer fields\n");
-            float minProxy = minimum;
-            float maxProxy = maximum;
-
-            DrawMinimumEntry(ref minProxy, false);
-            minimum = (int)minProxy;
-
-            DrawMaximumEntry(ref maxProxy, false);
-            maximum = (int)maxProxy;
-
-            TryFocusRelevantField();
-        }
-
-        public void BeginHysteresis(Rect region)
+        
+        internal void BeginHysteresis(Rect region)
         {
             _logBuilder?.Append($"  - Beginning heuristics at [x: {region.x:N}, y: {region.y:N}, group: {GroupId:N}]");
             _logBuilder?.Append($" with a size of [width: {region.width:N}, height: {region.height:N}]\n");
@@ -297,7 +299,7 @@ namespace SirRandoo.BetterSliders.Entities
             }
         }
 
-        public void EndHysteresis()
+        internal void EndHysteresis()
         {
             _logBuilder?.Append("  - Ending mouse heuristics\n");
             GUI.color = _previousColor ?? Color.white;
