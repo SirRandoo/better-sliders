@@ -76,3 +76,4 @@ crashlytics-build.properties
 /.idea/.idea.BetterSliders/
 /[0-9].[0-9]/Assemblies/
 /Better Sliders/Better Sliders.csproj.DotSettings
+/.idea/*lint/**
