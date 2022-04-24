@@ -81,19 +81,7 @@ namespace SirRandoo.BetterSliders.Entities
                 return false;
             }
 
-            bool initial = SliderSettings.IsAlwaysOn || (!InputHelper.AnyKeyDown(KeyCode.LeftControl, KeyCode.RightControl) && !_isEffectivelyDisabled);
-
-            if (!initial)
-            {
-                return false;
-            }
-
-            if (Event.current.type is EventType.MouseDrag or EventType.MouseMove)
-            {
-                return !Input.GetMouseButton(0);
-            }
-
-            return true;
+            return SliderSettings.IsAlwaysOn || (!InputHelper.AnyKeyDown(KeyCode.LeftControl, KeyCode.RightControl) && !_isEffectivelyDisabled);
         }
 
         internal void SetMaximumValue(float value)
@@ -327,14 +315,7 @@ namespace SirRandoo.BetterSliders.Entities
 
         private static bool ShouldReceiveFocus(Rect region)
         {
-            if (!region.Contains(Event.current.mousePosition))
-            {
-                return false;
-            }
-
-            // Theoretically may fix the input fields taking focus away from the sliders
-            // while the user is trying to interact with them.
-            return Event.current.type != EventType.MouseDrag && !Input.GetMouseButton(0);
+            return region.Contains(Event.current.mousePosition);
         }
 
         private void TryFocusControl(string name)
