@@ -38,7 +38,11 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
     {
         private static IEnumerable<MethodBase> TargetMethods()
         {
-            yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.HorizontalSlider));
+            yield return AccessTools.Method(
+                typeof(Widgets),
+                nameof(Widgets.HorizontalSlider),
+                new[] { typeof(Rect), typeof(float), typeof(float), typeof(bool), typeof(string), typeof(string), typeof(string), typeof(float) }
+            );
         }
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
