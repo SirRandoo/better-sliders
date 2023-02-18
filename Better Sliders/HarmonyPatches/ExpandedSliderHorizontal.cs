@@ -64,7 +64,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
             }
         }
 
-        private static void Postfix(Rect rect, ref float __result, float leftValue, float rightValue, float roundTo, [NotNull] ref NumberEntryController __state)
+        private static void Postfix(Rect rect, ref float __result, float roundTo, [NotNull] ref NumberEntryController __state)
         {
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
