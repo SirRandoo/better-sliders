@@ -38,11 +38,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
     {
         private static IEnumerable<MethodBase> TargetMethods()
         {
-            yield return AccessTools.Method(
-                typeof(Widgets),
-                nameof(Widgets.HorizontalSlider),
-                new[] { typeof(Rect), typeof(float), typeof(float), typeof(bool), typeof(string), typeof(string), typeof(string), typeof(float) }
-            );
+            yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.HorizontalSlider_NewTemp));
         }
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
@@ -64,7 +60,7 @@ namespace SirRandoo.BetterSliders.HarmonyPatches
             }
         }
 
-        private static void Postfix(Rect rect, ref float __result, float leftValue, float rightValue, float roundTo, [NotNull] ref NumberEntryController __state)
+        private static void Postfix(Rect rect, ref float __result, float roundTo, [NotNull] ref NumberEntryController __state)
         {
             GameFont cache = Text.Font;
             Text.Font = GameFont.Tiny;
