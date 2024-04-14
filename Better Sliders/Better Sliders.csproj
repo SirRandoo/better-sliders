@@ -5,6 +5,8 @@
         <RootNamespace>SirRandoo.BetterSliders</RootNamespace>
         <LangVersion>default</LangVersion>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <OutputPath>..\1.5\Assemblies\</OutputPath>
