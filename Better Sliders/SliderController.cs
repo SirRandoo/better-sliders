@@ -28,126 +28,121 @@ using SirRandoo.BetterSliders.Entities;
 using UnityEngine;
 using Verse;
 
-namespace SirRandoo.BetterSliders
+namespace SirRandoo.BetterSliders;
+
+internal static class SliderController
 {
-    internal static class SliderController
+    private static readonly Dictionary<int, List<NumberEntryController>> WindowNumberControllers = new();
+    private static readonly int BeginGroupHashCode = "BeginGroup".GetHashCode();
+
+    [NotNull]
+    internal static NumberEntryController[] ControllersForWindow([NotNull] Window window) =>
+        !WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers) ? Array.Empty<NumberEntryController>() : controllers.ToArray();
+
+    [NotNull] internal static NumberEntryController[] ControllersForCurrentWindow() => ControllersForWindow(Find.WindowStack.currentlyDrawnWindow);
+
+    [NotNull]
+    internal static NumberEntryController ControllerForPosition(Rect region)
     {
-        private static readonly Dictionary<int, List<NumberEntryController>> WindowNumberControllers = new();
-        private static readonly int BeginGroupHashCode = "BeginGroup".GetHashCode();
+        int groupId = GUIUtility.GetControlID(BeginGroupHashCode, FocusType.Passive);
 
-        [NotNull]
-        internal static NumberEntryController[] ControllersForWindow([NotNull] Window window) =>
-            !WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers) ? Array.Empty<NumberEntryController>() : controllers.ToArray();
+        NumberEntryController controller;
 
-        [NotNull] internal static NumberEntryController[] ControllersForCurrentWindow() => ControllersForWindow(Find.WindowStack.currentlyDrawnWindow);
-
-        [NotNull]
-        internal static NumberEntryController ControllerForPosition(Rect region)
+        if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
         {
-            int groupId = GUIUtility.GetControlID(BeginGroupHashCode, FocusType.Passive);
+            controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
 
-            NumberEntryController controller;
-
-            if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
-            {
-                controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
-
-                controllers = new List<NumberEntryController> { controller };
-                WindowNumberControllers[Find.WindowStack.currentlyDrawnWindow.ID] = controllers;
-
-                return controller;
-            }
-
-            foreach (NumberEntryController c in controllers)
-            {
-                if (groupId != c.GroupId)
-                {
-                    continue;
-                }
-
-                if (c.MinimumEntryRect.HasValue && c.MinimumEntryRect.Value.Overlaps(region))
-                {
-                    return c;
-                }
-
-                if (c.MaximumEntryRect.HasValue && c.MaximumEntryRect.Value.Overlaps(region))
-                {
-                    return c;
-                }
-            }
-
-            controller = new NumberEntryController
-            {
-                Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId
-            };
-            controllers.Add(controller);
+            controllers = new List<NumberEntryController> { controller };
+            WindowNumberControllers[Find.WindowStack.currentlyDrawnWindow.ID] = controllers;
 
             return controller;
         }
 
-        internal static void RemoveControllersForPosition(Rect region)
+        foreach (NumberEntryController c in controllers)
         {
-            if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
+            if (groupId != c.GroupId)
             {
-                return;
+                continue;
             }
 
-            controllers.RemoveAll(
-                c => (c.MinimumEntryRect.HasValue && c.MinimumEntryRect.Value.Overlaps(region))
-                    || (c.MaximumEntryRect.HasValue && c.MaximumEntryRect.Value.Overlaps(region))
-            );
-        }
-
-        internal static void RemoveControllerForWindow([NotNull] Window window)
-        {
-            if (WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers))
+            if (c.MinimumEntryRect.HasValue && c.MinimumEntryRect.Value.Overlaps(region))
             {
-                for (var i = 0; i < controllers.Count; i++)
-                {
-                    controllers[i].EndLogging();
-                }
+                return c;
             }
 
-            WindowNumberControllers.Remove(window.ID);
-        }
-
-        [NotNull]
-        internal static NumberEntryController[] GetActiveControllers()
-        {
-            return ControllersForCurrentWindow().Where(c => c.IsCurrentlyActive()).ToArray();
-        }
-
-        internal static bool IsControllerClosest([NotNull] this NumberEntryController controller)
-        {
-            Vector2 mousePosition = Event.current.mousePosition;
-            float controllerDistance = controller.EffectiveDistanceFromPoint(mousePosition);
-
-            foreach (NumberEntryController c in GetActiveControllers())
+            if (c.MaximumEntryRect.HasValue && c.MaximumEntryRect.Value.Overlaps(region))
             {
-                if (c.EffectiveDistanceFromPoint(mousePosition) < controllerDistance)
-                {
-                    return false;
-                }
+                return c;
             }
-
-            return true;
         }
 
-        private static float EffectiveDistanceFromPoint([NotNull] this NumberEntryController controller, Vector2 position)
+        controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
+        controllers.Add(controller);
+
+        return controller;
+    }
+
+    internal static void RemoveControllersForPosition(Rect region)
+    {
+        if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
         {
-            var controllerDistance = 10000f;
-
-            if (controller.MinimumEntryRect.HasValue)
-            {
-                controllerDistance = Mathf.Min(controllerDistance, GenUI.DistFromRect(controller.MinimumEntryRect.Value, position));
-            }
-
-            if (controller.MaximumEntryRect.HasValue)
-            {
-                controllerDistance = Mathf.Min(controllerDistance, GenUI.DistFromRect(controller.MaximumEntryRect.Value, position));
-            }
-
-            return controllerDistance;
+            return;
         }
+
+        controllers.RemoveAll(
+            c => (c.MinimumEntryRect.HasValue && c.MinimumEntryRect.Value.Overlaps(region)) || (c.MaximumEntryRect.HasValue && c.MaximumEntryRect.Value.Overlaps(region))
+        );
+    }
+
+    internal static void RemoveControllerForWindow([NotNull] Window window)
+    {
+        if (WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers))
+        {
+            for (var i = 0; i < controllers.Count; i++)
+            {
+                controllers[i].EndLogging();
+            }
+        }
+
+        WindowNumberControllers.Remove(window.ID);
+    }
+
+    [NotNull]
+    internal static NumberEntryController[] GetActiveControllers()
+    {
+        return ControllersForCurrentWindow().Where(c => c.IsCurrentlyActive()).ToArray();
+    }
+
+    internal static bool IsControllerClosest([NotNull] this NumberEntryController controller)
+    {
+        Vector2 mousePosition = Event.current.mousePosition;
+        float controllerDistance = controller.EffectiveDistanceFromPoint(mousePosition);
+
+        foreach (NumberEntryController c in GetActiveControllers())
+        {
+            if (c.EffectiveDistanceFromPoint(mousePosition) < controllerDistance)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static float EffectiveDistanceFromPoint([NotNull] this NumberEntryController controller, Vector2 position)
+    {
+        var controllerDistance = 10000f;
+
+        if (controller.MinimumEntryRect.HasValue)
+        {
+            controllerDistance = Mathf.Min(controllerDistance, GenUI.DistFromRect(controller.MinimumEntryRect.Value, position));
+        }
+
+        if (controller.MaximumEntryRect.HasValue)
+        {
+            controllerDistance = Mathf.Min(controllerDistance, GenUI.DistFromRect(controller.MaximumEntryRect.Value, position));
+        }
+
+        return controllerDistance;
     }
 }

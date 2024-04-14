@@ -1,88 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{4E900CA5-F80D-4599-B896-EA062E87A617}</ProjectGuid>
+        <TargetFramework>net472</TargetFramework>
         <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>SirRandoo.BetterSliders</RootNamespace>
-        <AssemblyName>Better Sliders</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <Deterministic>true</Deterministic>
         <LangVersion>default</LangVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>..\1.1\Assemblies\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
+        <OutputPath>..\1.5\Assemblies\</OutputPath>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.2 release|AnyCPU' ">
-        <OutputPath>..\1.2\Assemblies</OutputPath>
-        <DefineConstants>TRACE;RW12</DefineConstants>
-        <Optimize>true</Optimize>
-        <DebugType>pdbonly</DebugType>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.1 release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <DefineConstants>TRACE;RW11</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <OutputPath>..\1.1\Assemblies</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.1 debug|AnyCPU' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <DefineConstants>DEBUG;TRACE;RW11</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <OutputPath>..\1.1\Assemblies</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '1.2 debug|AnyCPU' ">
-        <OutputPath>..\1.2\Assemblies</OutputPath>
-        <DefineConstants>DEBUG;TRACE;RW12</DefineConstants>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release 1.3|AnyCPU' ">
-        <OutputPath>..\1.3\Assemblies\</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release 1.4|AnyCPU' ">
-      <OutputPath>..\1.4\Assemblies</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <OutputPath>..\1.5\Assemblies\</OutputPath>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.3641"/>
+        <PackageReference Include="Lib.Harmony" Version="2.2.2" ExcludeAssets="runtime"/>
     </ItemGroup>
-    <ItemGroup>
-        <Compile Include="BetterSliders.cs" />
-        <Compile Include="Entities\NumberEntryController.cs" />
-        <Compile Include="HarmonyPatches\ExpandedSliderFloat.cs" />
-        <Compile Include="HarmonyPatches\ExpandedSliderHorizontal.cs" />
-        <Compile Include="HarmonyPatches\ExpandedSliderInt.cs" />
-        <Compile Include="HarmonyPatches\Patcher.cs" />
-        <Compile Include="HarmonyPatches\WindowPatch.cs" />
-        <Compile Include="Helpers\InputHelper.cs" />
-        <Compile Include="Helpers\LayoutHelper.cs" />
-        <Compile Include="Helpers\UIHelper.cs" />
-        <Compile Include="MouseButtonCode.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="SliderController.cs" />
-        <Compile Include="SliderSettings.cs" />
-        <Compile Include="Textures.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.3641" />
-        <PackageReference Include="Lib.Harmony" Version="2.2.2" ExcludeAssets="runtime" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

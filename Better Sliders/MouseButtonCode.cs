@@ -20,24 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace SirRandoo.BetterSliders
+namespace SirRandoo.BetterSliders;
+
+/// <summary>
+///     The various mouse buttons the mod could care about.
+/// </summary>
+public enum MouseButtonCode
 {
     /// <summary>
-    ///     The various mouse buttons the mod could care about.
+    ///     The left mouse button.
     /// </summary>
-    public enum MouseButtonCode
-    {
-        /// <summary>
-        ///     The left mouse button.
-        /// </summary>
-        Left = 0,
-        /// <summary>
-        ///     The right mouse button.
-        /// </summary>
-        Right = 1,
-        /// <summary>
-        ///     The middle mouse button.
-        /// </summary>
-        Middle = 1
-    }
+    Left = 0,
+
+    /// <summary>
+    ///     The right mouse button.
+    /// </summary>
+    Right = 1,
+
+    /// <summary>
+    ///     The middle mouse button.
+    /// </summary>
+    Middle = 1
 }

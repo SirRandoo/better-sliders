@@ -29,73 +29,72 @@ using SirRandoo.BetterSliders.Entities;
 using UnityEngine;
 using Verse;
 
-namespace SirRandoo.BetterSliders.HarmonyPatches
+namespace SirRandoo.BetterSliders.HarmonyPatches;
+
+[HarmonyPatch]
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+public static class ExpandedSliderFloat
 {
-    [HarmonyPatch]
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public static class ExpandedSliderFloat
+    private static IEnumerable<MethodBase> TargetMethods()
     {
-        private static IEnumerable<MethodBase> TargetMethods()
+        yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.FloatRange));
+    }
+
+    [SuppressMessage("ReSharper", "RedundantAssignment")]
+    private static void Prefix(ref Rect rect, FloatRange range, [NotNull] ref NumberEntryController __state)
+    {
+        __state = SliderController.ControllerForPosition(rect);
+        __state.SetStateIfNull(range.min, range.max);
+
+        GameFont cache = Text.Font;
+        Text.Font = GameFont.Tiny;
+
+        var gapRect = new Rect(rect.center.x - 5f, Text.LineHeight / 2f - 1f, 10f, 5f);
+
+        float usedWidth = rect.width - gapRect.width - 10f;
+        float distributedWidth = usedWidth / 4f;
+        __state.MinimumEntryRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
+        __state.MaximumEntryRect = new Rect(gapRect.x + gapRect.width + __state.MinimumEntryRect.Value.width + 5f, rect.y, distributedWidth, Text.LineHeight);
+
+        Text.Font = cache;
+
+        if (SliderSettings.IsAlwaysOn)
         {
-            yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.FloatRange));
+            rect = new Rect(
+                __state.MinimumEntryRect.Value.x + __state.MinimumEntryRect.Value.width + 5f,
+                rect.y,
+                rect.width - __state.MaximumEntryRect.Value.width - __state.MaximumEntryRect.Value.width - 10f,
+                rect.height
+            );
+        }
+    }
+
+    private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, [NotNull] ref NumberEntryController __state)
+    {
+        GameFont cache = Text.Font;
+        Text.Font = GameFont.Tiny;
+
+        __state.BeginHysteresis(rect);
+
+        bool active = __state.IsCurrentlyActive();
+
+        if (active)
+        {
+            __state.BeginLogging();
+            __state.Draw(ref range.min, ref range.max);
         }
 
-        [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static void Prefix(ref Rect rect, FloatRange range, [NotNull] ref NumberEntryController __state)
+        __state.EndHysteresis();
+
+        if (!active)
         {
-            __state = SliderController.ControllerForPosition(rect);
-            __state.SetStateIfNull(range.min, range.max);
-
-            GameFont cache = Text.Font;
-            Text.Font = GameFont.Tiny;
-
-            var gapRect = new Rect(rect.center.x - 5f, Text.LineHeight / 2f - 1f, 10f, 5f);
-
-            float usedWidth = rect.width - gapRect.width - 10f;
-            float distributedWidth = usedWidth / 4f;
-            __state.MinimumEntryRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
-            __state.MaximumEntryRect = new Rect(gapRect.x + gapRect.width + __state.MinimumEntryRect.Value.width + 5f, rect.y, distributedWidth, Text.LineHeight);
-
-            Text.Font = cache;
-
-            if (SliderSettings.IsAlwaysOn)
-            {
-                rect = new Rect(
-                    __state.MinimumEntryRect.Value.x + __state.MinimumEntryRect.Value.width + 5f,
-                    rect.y,
-                    rect.width - __state.MaximumEntryRect.Value.width - __state.MaximumEntryRect.Value.width - 10f,
-                    rect.height
-                );
-            }
+            __state.EndLogging();
         }
 
-        private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, [NotNull] ref NumberEntryController __state)
-        {
-            GameFont cache = Text.Font;
-            Text.Font = GameFont.Tiny;
+        range.min = Mathf.Clamp(range.min, min, range.max);
+        range.max = Mathf.Clamp(range.max, range.min, max);
 
-            __state.BeginHysteresis(rect);
-
-            bool active = __state.IsCurrentlyActive();
-
-            if (active)
-            {
-                __state.BeginLogging();
-                __state.Draw(ref range.min, ref range.max);
-            }
-
-            __state.EndHysteresis();
-
-            if (!active)
-            {
-                __state.EndLogging();
-            }
-
-            range.min = Mathf.Clamp(range.min, min, range.max);
-            range.max = Mathf.Clamp(range.max, range.min, max);
-
-            Text.Font = cache;
-        }
+        Text.Font = cache;
     }
 }

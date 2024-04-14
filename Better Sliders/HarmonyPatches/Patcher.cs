@@ -25,15 +25,14 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Verse;
 
-namespace SirRandoo.BetterSliders.HarmonyPatches
+namespace SirRandoo.BetterSliders.HarmonyPatches;
+
+[UsedImplicitly]
+[StaticConstructorOnStartup]
+public static class Patcher
 {
-    [UsedImplicitly]
-    [StaticConstructorOnStartup]
-    public static class Patcher
+    static Patcher()
     {
-        static Patcher()
-        {
-            new Harmony("com.sirrandoo.bettersliders").PatchAll(Assembly.GetExecutingAssembly());
-        }
+        new Harmony("com.sirrandoo.bettersliders").PatchAll(Assembly.GetExecutingAssembly());
     }
 }

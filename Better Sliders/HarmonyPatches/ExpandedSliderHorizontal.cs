@@ -29,65 +29,64 @@ using SirRandoo.BetterSliders.Entities;
 using UnityEngine;
 using Verse;
 
-namespace SirRandoo.BetterSliders.HarmonyPatches
+namespace SirRandoo.BetterSliders.HarmonyPatches;
+
+[HarmonyPatch]
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+public static class ExpandedSliderHorizontal
 {
-    [HarmonyPatch]
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public static class ExpandedSliderHorizontal
+    private static IEnumerable<MethodBase> TargetMethods()
     {
-        private static IEnumerable<MethodBase> TargetMethods()
+        yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.HorizontalSlider_NewTemp));
+    }
+
+    [SuppressMessage("ReSharper", "RedundantAssignment")]
+    private static void Prefix(ref Rect rect, float value, [NotNull] ref NumberEntryController __state)
+    {
+        __state = SliderController.ControllerForPosition(rect);
+        __state.SetStateIfNull(value);
+
+        GameFont cache = Text.Font;
+        Text.Font = GameFont.Tiny;
+
+        float fieldWidth = rect.width / 5f;
+        __state.MinimumEntryRect = new Rect(rect.x + rect.width - fieldWidth, rect.y, fieldWidth, Text.LineHeight);
+        Text.Font = cache;
+
+        if (SliderSettings.IsAlwaysOn)
         {
-            yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.HorizontalSlider_NewTemp));
+            rect = new Rect(rect.x, rect.y, rect.width - __state.MinimumEntryRect.Value.width - 5f, rect.height);
+        }
+    }
+
+    private static void Postfix(Rect rect, ref float __result, float roundTo, [NotNull] ref NumberEntryController __state)
+    {
+        GameFont cache = Text.Font;
+        Text.Font = GameFont.Tiny;
+
+        __state.BeginHysteresis(rect);
+
+        bool active = __state.IsCurrentlyActive();
+
+        if (active)
+        {
+            __state.BeginLogging();
+            __state.Draw(ref __result);
         }
 
-        [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static void Prefix(ref Rect rect, float value, [NotNull] ref NumberEntryController __state)
+        __state.EndHysteresis();
+
+        if (!active)
         {
-            __state = SliderController.ControllerForPosition(rect);
-            __state.SetStateIfNull(value);
-
-            GameFont cache = Text.Font;
-            Text.Font = GameFont.Tiny;
-
-            float fieldWidth = rect.width / 5f;
-            __state.MinimumEntryRect = new Rect(rect.x + rect.width - fieldWidth, rect.y, fieldWidth, Text.LineHeight);
-            Text.Font = cache;
-
-            if (SliderSettings.IsAlwaysOn)
-            {
-                rect = new Rect(rect.x, rect.y, rect.width - __state.MinimumEntryRect.Value.width - 5f, rect.height);
-            }
+            __state.EndLogging();
         }
 
-        private static void Postfix(Rect rect, ref float __result, float roundTo, [NotNull] ref NumberEntryController __state)
+        Text.Font = cache;
+
+        if (roundTo > 0.0)
         {
-            GameFont cache = Text.Font;
-            Text.Font = GameFont.Tiny;
-
-            __state.BeginHysteresis(rect);
-
-            bool active = __state.IsCurrentlyActive();
-
-            if (active)
-            {
-                __state.BeginLogging();
-                __state.Draw(ref __result);
-            }
-
-            __state.EndHysteresis();
-
-            if (!active)
-            {
-                __state.EndLogging();
-            }
-
-            Text.Font = cache;
-
-            if (roundTo > 0.0)
-            {
-                __result = Mathf.RoundToInt(__result / roundTo) * roundTo;
-            }
+            __result = Mathf.RoundToInt(__result / roundTo) * roundTo;
         }
     }
 }

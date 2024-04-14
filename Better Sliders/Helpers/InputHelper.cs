@@ -24,105 +24,104 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
-namespace SirRandoo.BetterSliders.Helpers
+namespace SirRandoo.BetterSliders.Helpers;
+
+public static class InputHelper
 {
-    public static class InputHelper
+    /// <summary>
+    ///     Checks if any passed keys have been pressed, or currently being
+    ///     held down.
+    /// </summary>
+    /// <param name="codes">The <see cref="KeyCode" />s to check</param>
+    /// <returns>
+    ///     Whether or not any of the provided <see cref="KeyCode" />s
+    ///     were pressed or held down
+    /// </returns>
+    public static bool AnyKeyDown([NotNull] params KeyCode[] codes)
     {
-        /// <summary>
-        ///     Checks if any passed keys have been pressed, or currently being
-        ///     held down.
-        /// </summary>
-        /// <param name="codes">The <see cref="KeyCode"/>s to check</param>
-        /// <returns>
-        ///     Whether or not any of the provided <see cref="KeyCode"/>s
-        ///     were pressed or held down
-        /// </returns>
-        public static bool AnyKeyDown([NotNull] params KeyCode[] codes)
+        for (var i = 0; i < codes.Length; i++)
         {
-            for (var i = 0; i < codes.Length; i++)
+            if (Input.GetKey(codes[i]))
             {
-                if (Input.GetKey(codes[i]))
-                {
-                    return true;
-                }
+                return true;
             }
+        }
 
+        return false;
+    }
+
+    /// <summary>
+    ///     Checks if any passed mouse buttons has been pressed, or currently
+    ///     being held down.
+    /// </summary>
+    /// <param name="codes">The <see cref="MouseButtonCode" />s to check</param>
+    /// <returns>
+    ///     Whether or not any of the provided <see cref="MouseButtonCode" />s
+    ///     were pressed, or are currently being held down
+    /// </returns>
+    public static bool AnyMouseButtonDown([NotNull] params MouseButtonCode[] codes)
+    {
+        for (var i = 0; i < codes.Length; i++)
+        {
+            if (Input.GetMouseButton((int)codes[i]))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    ///     Checks whether or not the user left clicked in the region
+    ///     specified.
+    /// </summary>
+    /// <param name="region">The region to check</param>
+    /// <returns>
+    ///     Whether or not the user left clicked in the region specified.
+    /// </returns>
+    public static bool LeftClicked(this Rect region) => MouseButtonClicked(region, MouseButtonCode.Left);
+
+    /// <summary>
+    ///     Checks whether or not the user right clicked in the region
+    ///     specified.
+    /// </summary>
+    /// <param name="region">The region to check</param>
+    /// <returns>
+    ///     Whether or not the user right clicked in the region specified.
+    /// </returns>
+    public static bool RightClicked(this Rect region) => MouseButtonClicked(region, MouseButtonCode.Right);
+
+    /// <summary>
+    ///     Checks whether or not the user clicked in the region specified.
+    /// </summary>
+    /// <param name="region">The region to check</param>
+    /// <param name="codes">The <see cref="MouseButtonCode" />s to check</param>
+    /// <returns>Whether or not the user clicked in the region specified.</returns>
+    public static bool MouseButtonClicked(this Rect region, params MouseButtonCode[] codes)
+    {
+        if (!Mouse.IsOver(region))
+        {
             return false;
         }
 
-        /// <summary>
-        ///     Checks if any passed mouse buttons has been pressed, or currently
-        ///     being held down.
-        /// </summary>
-        /// <param name="codes">The <see cref="MouseButtonCode"/>s to check</param>
-        /// <returns>
-        ///     Whether or not any of the provided <see cref="MouseButtonCode"/>s
-        ///     were pressed, or are currently being held down
-        /// </returns>
-        public static bool AnyMouseButtonDown([NotNull] params MouseButtonCode[] codes)
-        {
-            for (var i = 0; i < codes.Length; i++)
-            {
-                if (Input.GetMouseButton((int)codes[i]))
-                {
-                    return true;
-                }
-            }
+        Event current = Event.current;
 
+        if (current.type != EventType.Used || current.type != EventType.MouseDown)
+        {
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether or not the user left clicked in the region
-        ///     specified.
-        /// </summary>
-        /// <param name="region">The region to check</param>
-        /// <returns>
-        ///     Whether or not the user left clicked in the region specified.
-        /// </returns>
-        public static bool LeftClicked(this Rect region) => MouseButtonClicked(region, MouseButtonCode.Left);
-
-        /// <summary>
-        ///     Checks whether or not the user right clicked in the region
-        ///     specified.
-        /// </summary>
-        /// <param name="region">The region to check</param>
-        /// <returns>
-        ///     Whether or not the user right clicked in the region specified.
-        /// </returns>
-        public static bool RightClicked(this Rect region) => MouseButtonClicked(region, MouseButtonCode.Right);
-
-        /// <summary>
-        ///     Checks whether or not the user clicked in the region specified.
-        /// </summary>
-        /// <param name="region">The region to check</param>
-        /// <param name="codes">The <see cref="MouseButtonCode"/>s to check</param>
-        /// <returns>Whether or not the user clicked in the region specified.</returns>
-        public static bool MouseButtonClicked(this Rect region, params MouseButtonCode[] codes)
+        for (var i = 0; i < codes.Length; i++)
         {
-            if (!Mouse.IsOver(region))
+            if (current.button == (int)codes[i])
             {
-                return false;
+                current.Use();
+
+                return true;
             }
-
-            Event current = Event.current;
-
-            if (current.type != EventType.Used || current.type != EventType.MouseDown)
-            {
-                return false;
-            }
-
-            for (var i = 0; i < codes.Length; i++)
-            {
-                if (current.button == (int)codes[i])
-                {
-                    current.Use();
-
-                    return true;
-                }
-            }
-
-            return false;
         }
+
+        return false;
     }
 }

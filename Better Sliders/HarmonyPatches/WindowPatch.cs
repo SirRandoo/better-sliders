@@ -26,24 +26,23 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Verse;
 
-namespace SirRandoo.BetterSliders.HarmonyPatches
+namespace SirRandoo.BetterSliders.HarmonyPatches;
+
+[HarmonyPatch]
+public static class WindowPatch
 {
-    [HarmonyPatch]
-    public static class WindowPatch
+    public static IEnumerable<MethodBase> TargetMethods()
     {
-        public static IEnumerable<MethodBase> TargetMethods()
+        yield return AccessTools.Method(typeof(WindowStack), nameof(WindowStack.TryRemove), new[] { typeof(Window), typeof(bool) });
+    }
+
+    public static void Postfix([CanBeNull] Window window)
+    {
+        if (window == null)
         {
-            yield return AccessTools.Method(typeof(WindowStack), nameof(WindowStack.TryRemove), new[] { typeof(Window), typeof(bool) });
+            return;
         }
 
-        public static void Postfix([CanBeNull] Window window)
-        {
-            if (window == null)
-            {
-                return;
-            }
-
-            SliderController.RemoveControllerForWindow(window);
-        }
+        SliderController.RemoveControllerForWindow(window);
     }
 }

@@ -23,11 +23,10 @@
 using UnityEngine;
 using Verse;
 
-namespace SirRandoo.BetterSliders
+namespace SirRandoo.BetterSliders;
+
+[StaticConstructorOnStartup]
+public static class Textures
 {
-    [StaticConstructorOnStartup]
-    public static class Textures
-    {
-        public static readonly Texture2D HysteresisCircle = ContentFinder<Texture2D>.Get("UI/HysteresisCircle");
-    }
+    public static readonly Texture2D HysteresisCircle = ContentFinder<Texture2D>.Get("UI/HysteresisCircle");
 }

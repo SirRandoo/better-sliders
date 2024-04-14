@@ -24,23 +24,22 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
-namespace SirRandoo.BetterSliders
+namespace SirRandoo.BetterSliders;
+
+[UsedImplicitly]
+public class BetterSliders : Mod
 {
-    [UsedImplicitly]
-    public class BetterSliders : Mod
+    public BetterSliders(ModContentPack content) : base(content)
     {
-        public BetterSliders(ModContentPack content) : base(content)
-        {
-            GetSettings<SliderSettings>();
-        }
+        GetSettings<SliderSettings>();
+    }
 
-        public override string SettingsCategory() => Content.Name;
+    public override string SettingsCategory() => Content.Name;
 
-        public override void DoSettingsWindowContents(Rect region)
-        {
-            SliderSettings.PrepareState();
+    public override void DoSettingsWindowContents(Rect region)
+    {
+        SliderSettings.PrepareState();
 
-            SliderSettings.Draw(region);
-        }
+        SliderSettings.Draw(region);
     }
 }
