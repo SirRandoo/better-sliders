@@ -38,7 +38,7 @@ public static class ExpandedSliderHorizontal
 {
     private static IEnumerable<MethodBase> TargetMethods()
     {
-        yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.HorizontalSlider_NewTemp));
+        yield return AccessTools.Method(typeof(Widgets), nameof(Widgets.HorizontalSlider));
     }
 
     [SuppressMessage("ReSharper", "RedundantAssignment")]
