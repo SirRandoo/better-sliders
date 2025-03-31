@@ -41,12 +41,16 @@ internal static class SliderController
 
     [NotNull] internal static NumberEntryController[] ControllersForCurrentWindow() => ControllersForWindow(Find.WindowStack.currentlyDrawnWindow);
 
-    [NotNull]
     internal static NumberEntryController ControllerForPosition(Rect region)
     {
         int groupId = GUIUtility.GetControlID(BeginGroupHashCode, FocusType.Passive);
 
         NumberEntryController controller;
+
+        if (Find.WindowStack.currentlyDrawnWindow == null)
+        {
+            return null;
+        }
 
         if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
         {
