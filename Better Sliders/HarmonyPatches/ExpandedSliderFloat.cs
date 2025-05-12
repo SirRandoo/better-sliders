@@ -42,10 +42,18 @@ public static class ExpandedSliderFloat
     }
 
     [SuppressMessage("ReSharper", "RedundantAssignment")]
-    private static void Prefix(ref Rect rect, FloatRange range, [NotNull] ref NumberEntryController __state)
+    private static bool Prefix(ref Rect rect, FloatRange range, [NotNull] ref (NumberEntryController, bool) __state)
     {
-        __state = SliderController.ControllerForPosition(rect);
-        __state.SetStateIfNull(range.min, range.max);
+        var tempState = SliderController.ControllerForPosition(rect);
+
+        if (tempState == null)
+        {
+            __state = (null, false);
+            return false;
+        }
+
+        __state = (tempState, true);
+        __state.Item1.SetStateIfNull(range.min, range.max);
 
         GameFont cache = Text.Font;
         Text.Font = GameFont.Tiny;
@@ -54,42 +62,47 @@ public static class ExpandedSliderFloat
 
         float usedWidth = rect.width - gapRect.width - 10f;
         float distributedWidth = usedWidth / 4f;
-        __state.MinimumEntryRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
-        __state.MaximumEntryRect = new Rect(gapRect.x + gapRect.width + __state.MinimumEntryRect.Value.width + 5f, rect.y, distributedWidth, Text.LineHeight);
+        __state.Item1.MinimumEntryRect = new Rect(rect.x, rect.y, distributedWidth, Text.LineHeight);
+        __state.Item1.MaximumEntryRect = new Rect(gapRect.x + gapRect.width + __state.Item1.MinimumEntryRect.Value.width + 5f, rect.y, distributedWidth, Text.LineHeight);
 
         Text.Font = cache;
 
         if (SliderSettings.IsAlwaysOn)
         {
             rect = new Rect(
-                __state.MinimumEntryRect.Value.x + __state.MinimumEntryRect.Value.width + 5f,
+                __state.Item1.MinimumEntryRect.Value.x + __state.Item1.MinimumEntryRect.Value.width + 5f,
                 rect.y,
-                rect.width - __state.MaximumEntryRect.Value.width - __state.MaximumEntryRect.Value.width - 10f,
+                rect.width - __state.Item1.MaximumEntryRect.Value.width - __state.Item1.MaximumEntryRect.Value.width - 10f,
                 rect.height
             );
         }
+
+        return true;
     }
 
-    private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, [NotNull] ref NumberEntryController __state)
+    private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, [NotNull] ref (NumberEntryController, bool) __state)
     {
+        if (!__state.Item2)
+            return;
+
         GameFont cache = Text.Font;
         Text.Font = GameFont.Tiny;
 
-        __state.BeginHysteresis(rect);
+        __state.Item1.BeginHysteresis(rect);
 
-        bool active = __state.IsCurrentlyActive();
+        bool active = __state.Item1.IsCurrentlyActive();
 
         if (active)
         {
-            __state.BeginLogging();
-            __state.Draw(ref range.min, ref range.max);
+            __state.Item1.BeginLogging();
+            __state.Item1.Draw(ref range.min, ref range.max);
         }
 
-        __state.EndHysteresis();
+        __state.Item1.EndHysteresis();
 
         if (!active)
         {
-            __state.EndLogging();
+            __state.Item1.EndLogging();
         }
 
         range.min = Mathf.Clamp(range.min, min, range.max);
