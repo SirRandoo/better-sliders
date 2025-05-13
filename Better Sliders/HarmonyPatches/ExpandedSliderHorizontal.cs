@@ -47,57 +47,46 @@ public static class ExpandedSliderHorizontal
     }
 
     [SuppressMessage("ReSharper", "RedundantAssignment")]
-    private static bool Prefix(ref Rect rect, float value, [NotNull] ref (NumberEntryController, bool) __state)
+    private static bool Prefix(ref Rect rect, float value, [NotNull] ref NumberEntryController __state)
     {
-        var tempState = SliderController.ControllerForPosition(rect);
-
-        if (tempState == null)
-        {
-            __state = (null, false);
-            return false;
-        }
-
-        __state = (tempState, true);
-        __state.Item1.SetStateIfNull(value);
+        __state = SliderController.ControllerForPosition(rect);
+        __state.SetStateIfNull(value);
 
         GameFont cache = Text.Font;
         Text.Font = GameFont.Tiny;
 
         float fieldWidth = rect.width / 5f;
-        __state.Item1.MinimumEntryRect = new Rect(rect.x + rect.width - fieldWidth, rect.y, fieldWidth, Text.LineHeight);
+        __state.MinimumEntryRect = new Rect(rect.x + rect.width - fieldWidth, rect.y, fieldWidth, Text.LineHeight);
         Text.Font = cache;
 
         if (SliderSettings.IsAlwaysOn)
         {
-            rect = new Rect(rect.x, rect.y, rect.width - __state.Item1.MinimumEntryRect.Value.width - 5f, rect.height);
+            rect = new Rect(rect.x, rect.y, rect.width - __state.MinimumEntryRect.Value.width - 5f, rect.height);
         }
 
         return true;
     }
 
-    private static void Postfix(Rect rect, ref float __result, float roundTo, [NotNull] ref (NumberEntryController, bool) __state)
+    private static void Postfix(Rect rect, ref float __result, float roundTo, [NotNull] ref NumberEntryController __state)
     {
-        if (!__state.Item2)
-            return;
-
         GameFont cache = Text.Font;
         Text.Font = GameFont.Tiny;
 
-        __state.Item1.BeginHysteresis(rect);
+        __state.BeginHysteresis(rect);
 
-        bool active = __state.Item1.IsCurrentlyActive();
+        bool active = __state.IsCurrentlyActive();
 
         if (active)
         {
-            __state.Item1.BeginLogging();
-            __state.Item1.Draw(ref __result);
+            __state.BeginLogging();
+            __state.Draw(ref __result);
         }
 
-        __state.Item1.EndHysteresis();
+        __state.EndHysteresis();
 
         if (!active)
         {
-            __state.Item1.EndLogging();
+            __state.EndLogging();
         }
 
         Text.Font = cache;

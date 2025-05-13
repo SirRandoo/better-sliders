@@ -39,25 +39,31 @@ internal static class SliderController
     internal static NumberEntryController[] ControllersForWindow([NotNull] Window window) =>
         !WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers) ? Array.Empty<NumberEntryController>() : controllers.ToArray();
 
-    [NotNull] internal static NumberEntryController[] ControllersForCurrentWindow() => ControllersForWindow(Find.WindowStack.currentlyDrawnWindow);
+  [NotNull]
+  internal static NumberEntryController[] ControllersForCurrentWindow() {
+    var window = Find.WindowStack.currentlyDrawnWindow ?? Find.WindowStack.focusedWindow;
+    if (window == null) return [];
+    return ControllersForWindow(window);
+  }
 
-    internal static NumberEntryController ControllerForPosition(Rect region)
+  internal static NumberEntryController ControllerForPosition(Rect region)
     {
         int groupId = GUIUtility.GetControlID(BeginGroupHashCode, FocusType.Passive);
 
         NumberEntryController controller;
 
-        if (Find.WindowStack.currentlyDrawnWindow == null)
+        var window = Find.WindowStack.currentlyDrawnWindow ?? Find.WindowStack.focusedWindow;
+        if (window == null)
         {
             return null;
         }
 
-        if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
+        if (!WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers))
         {
-            controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
+            controller = new NumberEntryController { Parent = new System.WeakReference<Window>(window), GroupId = groupId };
 
             controllers = new List<NumberEntryController> { controller };
-            WindowNumberControllers[Find.WindowStack.currentlyDrawnWindow.ID] = controllers;
+            WindowNumberControllers[window.ID] = controllers;
 
             return controller;
         }
@@ -80,7 +86,7 @@ internal static class SliderController
             }
         }
 
-        controller = new NumberEntryController { Parent = new System.WeakReference<Window>(Find.WindowStack.currentlyDrawnWindow), GroupId = groupId };
+        controller = new NumberEntryController { Parent = new System.WeakReference<Window>(window), GroupId = groupId };
         controllers.Add(controller);
 
         return controller;
@@ -88,7 +94,9 @@ internal static class SliderController
 
     internal static void RemoveControllersForPosition(Rect region)
     {
-        if (!WindowNumberControllers.TryGetValue(Find.WindowStack.currentlyDrawnWindow.ID, out List<NumberEntryController> controllers))
+        var window = Find.WindowStack.currentlyDrawnWindow ?? Find.WindowStack.focusedWindow;
+        if (window is null) return;
+        if (!WindowNumberControllers.TryGetValue(window.ID, out List<NumberEntryController> controllers))
         {
             return;
         }
