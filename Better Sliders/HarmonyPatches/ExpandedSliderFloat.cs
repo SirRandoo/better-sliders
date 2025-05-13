@@ -42,9 +42,10 @@ public static class ExpandedSliderFloat
     }
 
     [SuppressMessage("ReSharper", "RedundantAssignment")]
-    private static void Prefix(ref Rect rect, FloatRange range, [NotNull] ref NumberEntryController __state)
+    private static bool Prefix(ref Rect rect, FloatRange range, [NotNull] ref NumberEntryController __state)
     {
         __state = SliderController.ControllerForPosition(rect);
+
         __state.SetStateIfNull(range.min, range.max);
 
         GameFont cache = Text.Font;
@@ -68,6 +69,8 @@ public static class ExpandedSliderFloat
                 rect.height
             );
         }
+
+        return true;
     }
 
     private static void Postfix(Rect rect, ref FloatRange range, float min, float max, ToStringStyle valueStyle, [NotNull] ref NumberEntryController __state)

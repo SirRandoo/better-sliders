@@ -42,7 +42,7 @@ public static class ExpandedSliderInt
     }
 
     [SuppressMessage("ReSharper", "RedundantAssignment")]
-    private static void Prefix(ref Rect rect, IntRange range, [NotNull] ref NumberEntryController __state)
+    private static bool Prefix(ref Rect rect, IntRange range, [NotNull] ref NumberEntryController __state)
     {
         __state = SliderController.ControllerForPosition(rect);
         __state.SetStateIfNull(range.min, range.max);
@@ -63,6 +63,8 @@ public static class ExpandedSliderInt
         {
             rect = new Rect(__state.MinimumEntryRect.Value.x + __state.MinimumEntryRect.Value.width + 5f, rect.y, usedWidth - 10f, rect.height);
         }
+
+        return true;
     }
 
     private static void Postfix(Rect rect, ref IntRange range, int min, int max, [NotNull] ref NumberEntryController __state)

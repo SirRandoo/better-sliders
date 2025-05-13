@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -46,7 +47,7 @@ public static class ExpandedSliderHorizontal
     }
 
     [SuppressMessage("ReSharper", "RedundantAssignment")]
-    private static void Prefix(ref Rect rect, float value, [NotNull] ref NumberEntryController __state)
+    private static bool Prefix(ref Rect rect, float value, [NotNull] ref NumberEntryController __state)
     {
         __state = SliderController.ControllerForPosition(rect);
         __state.SetStateIfNull(value);
@@ -62,6 +63,8 @@ public static class ExpandedSliderHorizontal
         {
             rect = new Rect(rect.x, rect.y, rect.width - __state.MinimumEntryRect.Value.width - 5f, rect.height);
         }
+
+        return true;
     }
 
     private static void Postfix(Rect rect, ref float __result, float roundTo, [NotNull] ref NumberEntryController __state)
