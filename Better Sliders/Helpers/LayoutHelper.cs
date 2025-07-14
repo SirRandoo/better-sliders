@@ -22,15 +22,17 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace SirRandoo.BetterSliders.Helpers;
 
-[SuppressMessage("ReSharper", "UnusedMember.Global")]
-[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+using NotNullAttribute = NotNullAttribute;
+
+[SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global")]
+[SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Global")]
 public static class LayoutHelper
 {
     /// <summary>
@@ -83,8 +85,11 @@ public static class LayoutHelper
     ///     This is typically the first parameter of
     ///     <see cref=" GUI.BeginScrollView(Rect, Vector2, Rect)" />.
     /// </remarks>
-    public static bool IsVisible(this Rect region, Rect scrollRect, Vector2 scrollPos) => (region.y >= scrollPos.y || region.y + region.height - 1f >= scrollPos.y)
-        && region.y <= scrollPos.y + scrollRect.height;
+    public static bool IsVisible(this Rect region, Rect scrollRect, Vector2 scrollPos)
+    {
+        return (region.y >= scrollPos.y || region.y + region.height - 1f >= scrollPos.y)
+               && region.y <= scrollPos.y + scrollRect.height;
+    }
 
     /// <summary>
     ///     Splits a <see cref="Rect" /> in two.
@@ -119,7 +124,10 @@ public static class LayoutHelper
     ///     line rect
     /// </returns>
     [NotNull]
-    public static Tuple<Rect, Rect> Split([NotNull] this Listing listing, float percent = 0.8f) => listing.GetRect(Text.LineHeight).Split(percent);
+    public static Tuple<Rect, Rect> Split([NotNull] this Listing listing, float percent = 0.8f)
+    {
+        return listing.GetRect(Text.LineHeight).Split(percent);
+    }
 
     /// <summary>
     ///     Splits the given region into two <see cref="Rect" />s

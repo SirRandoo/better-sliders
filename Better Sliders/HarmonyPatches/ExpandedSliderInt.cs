@@ -28,6 +28,7 @@ using JetBrains.Annotations;
 using SirRandoo.BetterSliders.Entities;
 using UnityEngine;
 using Verse;
+using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace SirRandoo.BetterSliders.HarmonyPatches;
 

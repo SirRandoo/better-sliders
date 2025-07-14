@@ -24,16 +24,19 @@ using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
+using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace SirRandoo.BetterSliders.Helpers;
 
-[SuppressMessage("ReSharper", "UnusedMember.Global")]
-[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+using NotNullAttribute = NotNullAttribute;
+
+[SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global")]
+[SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Global")]
 public static class UiHelper
 {
     private const float EntryButtonWidth = 50f;
-    private static readonly Color ExperimentalNoticeColor = new(1f, 0.53f, 0.76f);
-    private static readonly Color DescriptionTextColor = new(0.72f, 0.72f, 0.72f);
+    private static readonly Color ExperimentalNoticeColor = new(r: 1f, g: 0.53f, b: 0.76f);
+    private static readonly Color DescriptionTextColor = new(r: 0.72f, g: 0.72f, b: 0.72f);
 
     /// <summary>
     ///     Draws a stateful number field.
@@ -129,15 +132,12 @@ public static class UiHelper
         if (vertical)
         {
             region.y += region.width;
-            GUIUtility.RotateAroundPivot(-90f, region.position);
+            GUIUtility.RotateAroundPivot(angle: -90f, region.position);
         }
 
         Widgets.Label(region, text);
 
-        if (vertical)
-        {
-            GUI.matrix = Matrix4x4.identity;
-        }
+        if (vertical) GUI.matrix = Matrix4x4.identity;
 
         Text.Anchor = TextAnchor.UpperLeft;
         Text.Font = GameFont.Small;
@@ -205,12 +205,12 @@ public static class UiHelper
     /// <param name="anchor">The text anchor of the description text</param>
     public static void DrawDescription([NotNull] this Listing listing, string text, Color color, TextAnchor anchor = TextAnchor.UpperLeft)
     {
-        GameFont fontCache = Text.Font;
+        var fontCache = Text.Font;
         GUI.color = color;
         Text.Font = GameFont.Tiny;
         float width = listing.ColumnWidth * 0.7f;
         float height = Text.CalcHeight(text, width);
-        Rect lineRect = listing.GetRect(height);
+        var lineRect = listing.GetRect(height);
         var labelRect = new Rect(lineRect.x + 10f, lineRect.y, lineRect.width - 10 - width, lineRect.height);
 
         Label(labelRect, text, anchor, GameFont.Tiny);
@@ -252,10 +252,7 @@ public static class UiHelper
     /// </param>
     public static void GroupHeader([NotNull] this Listing listing, string name, bool gapPrefix = true)
     {
-        if (gapPrefix)
-        {
-            listing.Gap(Mathf.CeilToInt(Text.LineHeight * 1.25f));
-        }
+        if (gapPrefix) listing.Gap(Mathf.CeilToInt(Text.LineHeight * 1.25f));
 
         Label(listing.GetRect(Text.LineHeight), name, TextAnchor.LowerLeft, GameFont.Tiny);
         listing.GapLine(6f);
